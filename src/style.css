@@ -771,7 +771,11 @@ button:focus {
   font-size: 50px;
 }
 
-.ong-paragraph {
+.long-paragraph {
   line-height: 0.5em;
   background: red;
+}
+
+.testimonial-name {
+  text-transform: capitalize;
 }

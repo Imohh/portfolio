@@ -87,45 +87,52 @@ function Home2() {
               <SwiperSlide>
                 <p>
                   <span className="purple apostrophe">""</span>
+                  <blockquote className="blockquote mb-0">
                     Imoh is a highly skilled developer especially in ReactJs. He has incredible leadership skills, 
                     as well as an exemplary work ethic and friendly temprament, making him the model professional 
                     and wonderful human being. It was, and always is, a pleasure working with him.
+                  </blockquote>
                   <span className="purple apostrophe">""</span>
                   <br /><br />
-                  charles hul<br /><br />
+                  <span className="testimonial-name">charles hul</span><br /><br />
                   CEO Chekam
                 </p>
               </SwiperSlide>
               <SwiperSlide>
                 <p>
                   <span className="purple apostrophe">""</span>
-                  <span className="long-paaragraph">
+                  <blockquote className="blockquote mb-0">
                   Having been in the tech pace for over 15years, I can say for certain that Imoh 
                   is one of the most brilliant developers I have worked with. He has in-depth knowledge 
                   of multiple modern development technologies and the ability to learn quickly newer 
                   technologies. He delivers projects in a timely and professional way. His humility 
-                  is second to none and he codes brilliantly!</span>
+                  is second to none and he codes brilliantly!
+                  </blockquote>
                   <span className="purple apostrophe">""</span>
                   <br /><br />
-                  joseph abyem<br /><br />
+                  <span className="testimonial-name">joseph abyem</span><br /><br />
                   CTO Chekam
                 </p>
               </SwiperSlide>
               <SwiperSlide>
                 <p>
                   <span className="purple apostrophe">""</span>
-                  I own a London based luxury brand. Precious built my E-Commerce website and was the head of 
-                  my tech department. He was easy to work with and also willing to learn.
+                  <blockquote className="blockquote mb-0">
+                    I own a London based luxury brand. Precious built my E-Commerce website and was the head of 
+                    my tech department. He was easy to work with and also willing to learn.
+                  </blockquote>
                   <span className="purple apostrophe">""</span>
                   <br /><br />
-                  temitope jalekun<br /><br />
-                  Photographer
+                  <span className="testimonial-name">etopidiok joshua</span><br /><br />
+                  Financial Markets Enthusiast
                 </p>
               </SwiperSlide>
               <SwiperSlide>
                 <p>
                   <span className="purple apostrophe">""</span>
-                  Extremely professional and puts out deliverables very timely
+                  <blockquote className="blockquote mb-0">
+                    Extremely professional and puts out deliverables very timely
+                  </blockquote>
                   <span className="purple apostrophe">""</span>
                   <br /><br />
                   joel adu<br /><br />
@@ -135,7 +142,9 @@ function Home2() {
               <SwiperSlide>
                 <p>
                   <span className="purple apostrophe">""</span>
-                  Precious is an amazing web developer, easy to work with and he gives attention to details.
+                  <blockquote className="blockquote mb-0">
+                    Precious is an amazing web developer, easy to work with and he gives attention to details.
+                  </blockquote>
                   <span className="purple apostrophe">""</span>
                   <br /><br />
                   temitope jalekun<br /><br />
