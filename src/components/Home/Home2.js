@@ -8,6 +8,16 @@ import {
   AiFillInstagram,
 } from "react-icons/ai";
 import { FaLinkedinIn } from "react-icons/fa";
+import { Swiper, SwiperSlide } from "swiper/react";
+
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+
+
+// import required modules
+import { Autoplay, Pagination, Navigation } from "swiper";
 
 function Home2() {
   return (
@@ -56,6 +66,83 @@ function Home2() {
             <Tilt>
               <img src={myImg} className="img-fluid" alt="avatar" />
             </Tilt>
+          </Col>
+        </Row>
+        <Row>
+          <Col md={12} className="testimonials">
+            <Swiper
+              spaceBetween={30}
+              centeredSlides={true}
+              autoplay={{
+                delay: 2500,
+                disableOnInteraction: false,
+              }}
+              pagination={{
+                clickable: true,
+              }}
+              navigation={true}
+              modules={[Autoplay, Pagination, Navigation]}
+              className="mySwiper"
+            >
+              <SwiperSlide>
+                <p>
+                  <span className="purple apostrophe">""</span>
+                    Imoh is a highly skilled developer especially in ReactJs. He has incredible leadership skills, 
+                    as well as an exemplary work ethic and friendly temprament, making him the model professional 
+                    and wonderful human being. It was, and always is, a pleasure working with him.
+                  <span className="purple apostrophe">""</span>
+                  <br /><br />
+                  charles hul<br /><br />
+                  CEO Chekam
+                </p>
+              </SwiperSlide>
+              <SwiperSlide>
+                <p>
+                  <span className="purple apostrophe">""</span>
+                  <span className="long-paaragraph">
+                  Having been in the tech pace for over 15years, I can say for certain that Imoh 
+                  is one of the most brilliant developers I have worked with. He has in-depth knowledge 
+                  of multiple modern development technologies and the ability to learn quickly newer 
+                  technologies. He delivers projects in a timely and professional way. His humility 
+                  is second to none and he codes brilliantly!</span>
+                  <span className="purple apostrophe">""</span>
+                  <br /><br />
+                  joseph abyem<br /><br />
+                  CTO Chekam
+                </p>
+              </SwiperSlide>
+              <SwiperSlide>
+                <p>
+                  <span className="purple apostrophe">""</span>
+                  I own a London based luxury brand. Precious built my E-Commerce website and was the head of 
+                  my tech department. He was easy to work with and also willing to learn.
+                  <span className="purple apostrophe">""</span>
+                  <br /><br />
+                  temitope jalekun<br /><br />
+                  Photographer
+                </p>
+              </SwiperSlide>
+              <SwiperSlide>
+                <p>
+                  <span className="purple apostrophe">""</span>
+                  Extremely professional and puts out deliverables very timely
+                  <span className="purple apostrophe">""</span>
+                  <br /><br />
+                  joel adu<br /><br />
+                  Photographer
+                </p>
+              </SwiperSlide>
+              <SwiperSlide>
+                <p>
+                  <span className="purple apostrophe">""</span>
+                  Precious is an amazing web developer, easy to work with and he gives attention to details.
+                  <span className="purple apostrophe">""</span>
+                  <br /><br />
+                  temitope jalekun<br /><br />
+                  Photographer
+                </p>
+              </SwiperSlide>
+            </Swiper>
           </Col>
         </Row>
         <Row>

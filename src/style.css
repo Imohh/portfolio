@@ -741,3 +741,37 @@ button:focus {
 .fork-btn-inner::after {
   display: none !important;
 }
+
+
+/*MY STYLES*/
+.swiper {
+  width: 100%;
+  height: 400px;
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: transparent;
+  color: #fff;
+  /* Center slide text vertically */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.apostrophe {
+  font-size: 50px;
+}
+
+.ong-paragraph {
+  line-height: 0.5em;
+  background: red;
+}
