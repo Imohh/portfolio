@@ -744,6 +744,11 @@ button:focus {
 
 
 /*MY STYLES*/
+.testimonials {
+  padding-top: 5%;
+  padding-bottom: 5%;
+}
+
 .swiper {
   width: 100%;
   height: 400px;

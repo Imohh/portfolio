@@ -32,7 +32,7 @@ function Home2() {
               I fell in love with programming and I have at least learnt
               something, I think… 🤷‍♂️
               <br />
-              <br />I am fluent in classics like
+              <br />I am fluent in classics like 
               <i>
                 <b className="purple">React, Typescript, Angular, Javascript, Nodejs, Expressjs and MongoDB</b>
               </i>
@@ -70,6 +70,12 @@ function Home2() {
         </Row>
         <Row>
           <Col md={12} className="testimonials">
+            <h1 style={{ fontSize: "2.6em" }}>
+              <span className="purple">TESTIMONIALS </span>
+            </h1>
+
+
+
             <Swiper
               spaceBetween={30}
               centeredSlides={true}
@@ -84,6 +90,7 @@ function Home2() {
               modules={[Autoplay, Pagination, Navigation]}
               className="mySwiper"
             >
+
               <SwiperSlide>
                 <p>
                   <span className="purple apostrophe">""</span>
@@ -135,7 +142,7 @@ function Home2() {
                   </blockquote>
                   <span className="purple apostrophe">""</span>
                   <br /><br />
-                  joel adu<br /><br />
+                  <span className="testimonial-name">joel adu</span><br /><br />
                   Photographer
                 </p>
               </SwiperSlide>
@@ -147,7 +154,7 @@ function Home2() {
                   </blockquote>
                   <span className="purple apostrophe">""</span>
                   <br /><br />
-                  temitope jalekun<br /><br />
+                  <span className="testimonial-name">temitope jalekun</span><br /><br />
                   Photographer
                 </p>
               </SwiperSlide>
