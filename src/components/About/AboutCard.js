@@ -9,12 +9,14 @@ function AboutCard() {
         <blockquote className="blockquote mb-0">
           <p style={{ textAlign: "justify" }}>
             Hi Everyone, I am <span className="purple">Imoh Precious </span>
-            from <span className="purple"> Akwa Ibom state,</span> based in <span className="purple">Lagos, Nigeria.</span>
+            based in <span className="purple">Lagos, Nigeria.</span>
             <br /> I am a student pursuing a Bachelor's Degree (BSc)
             in Economics and Finance at Brandon University.
             <br />
             Additionally, I am currently employed as a software developer at
             Chekam.com.
+            <br />
+            I love to use my knowledge of tech to solve real life problems, find solutions, build products.
             <br />
             <br />
             Apart from coding, some other activities that I love to do!
