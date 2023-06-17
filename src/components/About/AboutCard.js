@@ -10,7 +10,7 @@ function AboutCard() {
           <p style={{ textAlign: "justify" }}>
             Hi Everyone, I am <span className="purple">Imoh Precious </span>
             based in <span className="purple">Lagos, Nigeria.</span>
-            <br /> I am a student pursuing a Bachelor's Degree (BSc)
+            <br/> I have a diploma in Economics from the University of Lagos, I am also a student pursuing a Bachelor's Degree (BSc)
             in Economics and Finance at Brandon University.
             <br />
             Additionally, I am currently employed as a software developer at
