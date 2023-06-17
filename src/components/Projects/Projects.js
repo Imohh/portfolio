@@ -8,6 +8,7 @@ import editor from "../../Assets/Projects/codeEditor.png";
 import chatify from "../../Assets/Projects/chatify.png";
 import suicide from "../../Assets/Projects/suicide.png";
 import bitsOfCode from "../../Assets/Projects/blog.png";
+import chekam from "../../Assets/Projects/chekam.png";
 
 function Projects() {
   return (
@@ -23,12 +24,12 @@ function Projects() {
         <Row style={{ justifyContent: "center", paddingBottom: "10px" }}>
           <Col md={4} className="project-card">
             <ProjectCard
-              imgPath={chatify}
+              imgPath={chekam}
               isBlog={false}
-              title="Chatify"
-              description="Personal Chat Room or Workspace to share resources and hangout with friends build with react.js, Material-UI, and Firebase. Have features which allows user for realtime messaging, image sharing as well as supports reactions on messages."
-              ghLink="https://github.com/soumyajit4419/Chatify"
-              demoLink="https://chatify-49.web.app/"
+              title="Chekam"
+              description="Property listing website with filters that enables users search for properies with ease, built with React, Material-UI, Bootstrap and Firebse."
+              // ghLink="https://github.com/soumyajit4419/Chatify"
+              demoLink="https://chekam.com"
             />
           </Col>
 
