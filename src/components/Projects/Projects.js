@@ -7,7 +7,7 @@ import emotion from "../../Assets/Projects/emotion.png";
 import editor from "../../Assets/Projects/codeEditor.png";
 import chatify from "../../Assets/Projects/chatify.png";
 import suicide from "../../Assets/Projects/suicide.png";
-import bitsOfCode from "../../Assets/Projects/blog.png";
+import swiftedu from "../../Assets/Projects/swiftedu.png";
 import chekam from "../../Assets/Projects/chekam.png";
 
 function Projects() {
@@ -35,12 +35,12 @@ function Projects() {
 
           <Col md={4} className="project-card">
             <ProjectCard
-              imgPath={bitsOfCode}
+              imgPath={swiftedu}
               isBlog={false}
-              title="Bits-0f-C0de"
-              description="My personal blog page build with Next.js and Tailwind Css which takes the content from makdown files and renders it using Next.js. Supports dark mode and easy to write blogs using markdown."
-              ghLink="https://github.com/soumyajit4419/Bits-0f-C0de"
-              demoLink="https://blogs.soumya-jit.tech/"
+              title="Swift Educational Consult"
+              description="A recruitment agency that help companies in hiring the best talent for their company"
+              ghLink="https://github.com/imohh/swiftedu"
+              demoLink="https://swiftedu.vercel.app/"
             />
           </Col>
 
