@@ -38,7 +38,7 @@ function Projects() {
               imgPath={swiftedu}
               isBlog={false}
               title="Swift Educational Consult"
-              description="A recruitment agency that help companies in hiring the best talent for their company"
+              description="A recruitment agency that help companies in hiring the best talent for their company. Built with React and Tailwindcss"
               ghLink="https://github.com/imohh/swiftedu"
               demoLink="https://swiftedu.vercel.app/"
             />
