@@ -4,7 +4,7 @@ import ProjectCard from "./ProjectCards";
 import Particle from "../Particle";
 import leaf from "../../Assets/Projects/leaf.png";
 import emotion from "../../Assets/Projects/emotion.png";
-import lend from "../../Assets/Projects/lend.png";
+import lends from "../../Assets/Projects/lends.png";
 import chatify from "../../Assets/Projects/chatify.png";
 import suicide from "../../Assets/Projects/suicide.png";
 import swiftedu from "../../Assets/Projects/swiftedu.png";
@@ -46,7 +46,7 @@ function Projects() {
 
           <Col md={4} className="project-card">
             <ProjectCard
-              imgPath={lend}
+              imgPath={lends}
               isBlog={false}
               title="Lendsqr"
               description="Admin Panel for Lendsqr company that shows the number of users fetched from a dummy API, fetched the data and displayed it in a table, 
