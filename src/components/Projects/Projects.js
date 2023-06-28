@@ -35,6 +35,17 @@ function Projects() {
 
           <Col md={4} className="project-card">
             <ProjectCard
+              imgPath={grep}
+              isBlog={false}
+              title="Grep"
+              description="Delivery app where users can track their orders and also see details of the delivery person assigned to them. Built with React, Tailwindcss"
+              ghLink="https://github.com/imohh/grep-website"
+              demoLink="https://grep-website.vercel.app/"
+            />
+          </Col>
+
+          <Col md={4} className="project-card">
+            <ProjectCard
               imgPath={swiftedu}
               isBlog={false}
               title="Swift Educational Consult"
@@ -53,17 +64,6 @@ function Projects() {
               and we caan view each user profile as well as search and filter users"
               ghLink="https://github.com/imohh/lendsqr"
               demoLink="https://imoh-precious-lendsqr-fe-test.vercel.app/"              
-            />
-          </Col>
-
-          <Col md={4} className="project-card">
-            <ProjectCard
-              imgPath={grep}
-              isBlog={false}
-              title="Grep"
-              description="Delivery app where users can track their orders and also see details of the delivery person assigned to them. Built with React, Tailwindcss"
-              ghLink="https://github.com/imohh/grep-website"
-              demoLink="https://grep-website.vercel.app/"
             />
           </Col>
 
