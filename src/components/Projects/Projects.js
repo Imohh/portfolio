@@ -38,7 +38,7 @@ function Projects() {
               imgPath={grep}
               isBlog={false}
               title="Grep"
-              description="Delivery app where users can track their orders and also see details of the delivery person assigned to them. Built with React, Tailwindcss"
+              description="Delivery app where users can track their orders and also see details of the delivery person assigned to them. Built with React, Tailwindcss, Expressjs, Nodejs and MongoDB"
               ghLink="https://github.com/imohh/grep-website"
               demoLink="https://grep-website.vercel.app/"
             />
