@@ -63,7 +63,7 @@ function Projects() {
               title="Grep"
               description="Delivery app where users can track their orders and also see details of the delivery person assigned to them. Built with React, Tailwindcss"
               ghLink="https://github.com/imohh/grep-website"
-              demoLink="https://plant49-ai.herokuapp.com/"
+              demoLink="https://grep-website.vercel.app/"
             />
           </Col>
 
