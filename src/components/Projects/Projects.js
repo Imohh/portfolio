@@ -2,7 +2,7 @@ import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import ProjectCard from "./ProjectCards";
 import Particle from "../Particle";
-import leaf from "../../Assets/Projects/leaf.png";
+import grep from "../../Assets/Projects/grep.png";
 import emotion from "../../Assets/Projects/emotion.png";
 import lends from "../../Assets/Projects/lends.png";
 import chatify from "../../Assets/Projects/chatify.png";
@@ -58,11 +58,11 @@ function Projects() {
 
           <Col md={4} className="project-card">
             <ProjectCard
-              imgPath={leaf}
+              imgPath={grep}
               isBlog={false}
-              title="Plant AI"
-              description="Used the plant disease dataset from Kaggle and trained a image classifer model using 'PyTorch' framework using CNN and Transfer Learning with 38 classes of various plant leaves. The model was successfully able to detect diseased and healthy leaves of 14 unique plants. I was able to achieve an accuracy of 98% by using Resnet34 pretrained model."
-              ghLink="https://github.com/soumyajit4419/Plant_AI"
+              title="Grep"
+              description="Delivery app where users can track their orders and also see details of the delivery person assigned to them. Built with React, Tailwindcss"
+              ghLink="https://github.com/imohh/grep"
               demoLink="https://plant49-ai.herokuapp.com/"
             />
           </Col>
