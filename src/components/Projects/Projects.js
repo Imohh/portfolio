@@ -27,7 +27,7 @@ function Projects() {
               imgPath={chekam}
               isBlog={false}
               title="Chekam"
-              description="Property listing website with filters that enables users search for properies with ease, built with React, Material-UI, Bootstrap and Firebse."
+              description="Property listing website with filters that enables users search for properies with ease, built with React, Material-UI, Bootstrap and Firebase."
               // ghLink="https://github.com/soumyajit4419/Chatify"
               demoLink="https://chekam.com"
             />
@@ -35,12 +35,12 @@ function Projects() {
 
           <Col md={4} className="project-card">
             <ProjectCard
-              imgPath={grep}
+              imgPath={nike}
               isBlog={false}
-              title="Grep"
-              description="Delivery app where users can track their orders and also see details of the delivery person assigned to them. Built with React, Tailwindcss, Expressjs, Nodejs and MongoDB"
-              ghLink="https://github.com/imohh/grep-website"
-              demoLink="https://grep-website.vercel.app/"
+              title="Nike Store"
+              description="Fully functional E-Commerce website. Built with Vite + React, Tailwindcss, Redux"
+              ghLink="https://github.com/imohh/nike-store"
+              demoLink="https://nike-store-roan.vercel.app/"
             />
           </Col>
 
@@ -69,12 +69,12 @@ function Projects() {
 
           <Col md={4} className="project-card">
             <ProjectCard
-              imgPath={suicide}
+              imgPath={grep}
               isBlog={false}
-              title="Ai For Social Good"
-              description="Using 'Natural Launguage Processing' for the detection of suicide-related posts and user's suicide ideation in cyberspace  and thus helping in sucide prevention."
-              ghLink="https://github.com/soumyajit4419/AI_For_Social_Good"
-              // demoLink="https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley" <--------Please include a demo link here
+              title="Grep"
+              description="Delivery app where users can track their orders and also see details of the delivery person assigned to them. Built with React, Tailwindcss, Expressjs, Nodejs and MongoDB"
+              ghLink="https://github.com/imohh/grep-website"
+              demoLink="https://grep-website.vercel.app/"
             />
           </Col>
 
