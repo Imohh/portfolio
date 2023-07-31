@@ -9,6 +9,7 @@ import chatify from "../../Assets/Projects/chatify.png";
 import suicide from "../../Assets/Projects/suicide.png";
 import swiftedu from "../../Assets/Projects/swiftedu.png";
 import chekam from "../../Assets/Projects/chekam.png";
+import nike from "../../Assets/Projects/nike.png";
 
 function Projects() {
   return (
