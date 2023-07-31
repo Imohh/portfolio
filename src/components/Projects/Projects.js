@@ -47,14 +47,15 @@ function Projects() {
 
           <Col md={4} className="project-card">
             <ProjectCard
-              imgPath={swiftedu}
+              imgPath={grep}
               isBlog={false}
-              title="Swift Educational Consult"
-              description="A recruitment agency that help companies in hiring the best talent for their company. Built with React and Tailwindcss"
-              ghLink="https://github.com/imohh/swiftedu"
-              demoLink="https://swiftedu.vercel.app/"
+              title="Grep"
+              description="Delivery app where users can track their orders and also see details of the delivery person assigned to them. Built with React, Tailwindcss, Expressjs, Nodejs and MongoDB"
+              ghLink="https://github.com/imohh/grep-website"
+              demoLink="https://grep-website.vercel.app/"
             />
           </Col>
+
 
           <Col md={4} className="project-card">
             <ProjectCard
@@ -70,12 +71,12 @@ function Projects() {
 
           <Col md={4} className="project-card">
             <ProjectCard
-              imgPath={grep}
+              imgPath={swiftedu}
               isBlog={false}
-              title="Grep"
-              description="Delivery app where users can track their orders and also see details of the delivery person assigned to them. Built with React, Tailwindcss, Expressjs, Nodejs and MongoDB"
-              ghLink="https://github.com/imohh/grep-website"
-              demoLink="https://grep-website.vercel.app/"
+              title="Swift Educational Consult"
+              description="A recruitment agency that help companies in hiring the best talent for their company. Built with React and Tailwindcss"
+              ghLink="https://github.com/imohh/swiftedu"
+              demoLink="https://swiftedu.vercel.app/"
             />
           </Col>
 
