@@ -3,10 +3,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import ProjectCard from "./ProjectCards";
 import Particle from "../Particle";
 import grep from "../../Assets/Projects/grep.png";
-import emotion from "../../Assets/Projects/emotion.png";
 import lends from "../../Assets/Projects/lends.png";
-import chatify from "../../Assets/Projects/chatify.png";
-import suicide from "../../Assets/Projects/suicide.png";
 import swiftedu from "../../Assets/Projects/swiftedu.png";
 import chekam from "../../Assets/Projects/chekam.png";
 import nike from "../../Assets/Projects/nike.png";
@@ -29,7 +26,6 @@ function Projects() {
               isBlog={false}
               title="Chekam"
               description="Property listing website with filters that enables users search for properies with ease, built with React, Material-UI, Bootstrap and Firebase."
-              // ghLink="https://github.com/soumyajit4419/Chatify"
               demoLink="https://chekam.com"
             />
           </Col>
@@ -80,17 +76,6 @@ function Projects() {
             />
           </Col>
 
-          <Col md={4} className="project-card">
-            <ProjectCard
-              imgPath={emotion}
-              isBlog={false}
-              title="Face Recognition and Emotion Detection"
-              description="Trained a CNN classifier using 'FER-2013 dataset' with Keras and tensorflow backened. The classifier sucessfully predicted the various types of emotions of human. And the highest accuracy obtained with the model was 60.1%.
-              Then used Open-CV to detect the face in an image and then pass the face to the classifer to predict the emotion of a person."
-              ghLink="https://github.com/soumyajit4419/Face_And_Emotion_Detection"
-              // demoLink="https://blogs.soumya-jit.tech/"      <--------Please include a demo link here 
-            />
-          </Col>
         </Row>
       </Container>
     </Container>
