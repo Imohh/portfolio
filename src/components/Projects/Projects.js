@@ -7,6 +7,7 @@ import lends from "../../Assets/Projects/lends.png";
 import swiftedu from "../../Assets/Projects/swiftedu.png";
 import chekam from "../../Assets/Projects/chekam.png";
 import nike from "../../Assets/Projects/nike.png";
+import eminence from "../../Assets/Projects/eminence.png";
 
 function Projects() {
   return (
@@ -27,6 +28,17 @@ function Projects() {
               title="Chekam"
               description="Property listing website with filters that enables users search for properies with ease, built with React, Material-UI, Bootstrap and Firebase."
               demoLink="https://chekam.com"
+            />
+          </Col>
+
+          <Col md={4} className="project-card">
+            <ProjectCard
+              imgPath={eminence}
+              isBlog={false}
+              title="Eminence E-Commerce"
+              description="E-Commerce website for a high end luxury fashion brand based in the UK. Built with MERN Stack"
+              ghLink="https://github.com/imohh/ecommerce-server"
+              demoLink="https://testing-eminence.vercel.app/"
             />
           </Col>
 
