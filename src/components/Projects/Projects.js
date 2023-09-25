@@ -38,7 +38,7 @@ function Projects() {
               title="Eminence E-Commerce"
               description="E-Commerce website for a high end luxury fashion brand based in the UK. Built with MERN Stack"
               ghLink="https://github.com/imohh/ecommerce-server"
-              demoLink="https://eminencebygtx.com/"
+              demoLink="https://eminencebygtx.com"
             />
           </Col>
 
