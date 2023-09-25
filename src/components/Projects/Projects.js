@@ -4,7 +4,7 @@ import ProjectCard from "./ProjectCards";
 import Particle from "../Particle";
 import grep from "../../Assets/Projects/grep.png";
 import lends from "../../Assets/Projects/lends.png";
-import swiftedu from "../../Assets/Projects/swiftedu.png";
+import glintz from "../../Assets/Projects/glintz.png";
 import chekam from "../../Assets/Projects/chekam.png";
 import nike from "../../Assets/Projects/nike.png";
 import eminence from "../../Assets/Projects/eminence.png";
@@ -79,12 +79,12 @@ function Projects() {
 
           <Col md={4} className="project-card">
             <ProjectCard
-              imgPath={swiftedu}
+              imgPath={glintz}
               isBlog={false}
-              title="Swift Educational Consult"
-              description="A recruitment agency that help companies in hiring the best talent for their company. Built with React and Tailwindcss"
-              ghLink="https://github.com/imohh/swiftedu"
-              demoLink="https://swiftedu.vercel.app/"
+              title="Glintz Photography"
+              description="A photography website built with MERN Stack. With fully functional Admin Panel"
+              ghLink="https://github.com/imohh/glintz-route"
+              demoLink="https://glintz-route.vercel.app"
             />
           </Col>
 
