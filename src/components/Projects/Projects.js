@@ -65,7 +65,7 @@ function Projects() {
           </Col>
 
 
-          <Col md={4} className="project-card">
+          {/*<Col md={4} className="project-card">
             <ProjectCard
               imgPath={lends}
               isBlog={false}
@@ -75,7 +75,7 @@ function Projects() {
               ghLink="https://github.com/imohh/lendsqr"
               demoLink="https://imoh-precious-lendsqr-fe-test.vercel.app/"              
             />
-          </Col>
+          </Col>*/}
 
           <Col md={4} className="project-card">
             <ProjectCard
