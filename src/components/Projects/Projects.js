@@ -84,7 +84,7 @@ function Projects() {
               title="Glintz Photography"
               description="A photography website built with MERN Stack. With fully functional Admin Panel"
               ghLink="https://github.com/imohh/glintz-route"
-              demoLink="https://glintz-route.vercel.app"
+              demoLink="https://glintzphotography.org"
             />
           </Col>
 
