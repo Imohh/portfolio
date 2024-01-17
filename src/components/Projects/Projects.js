@@ -8,6 +8,7 @@ import glintz from "../../Assets/Projects/glintz.png";
 import chekam from "../../Assets/Projects/chekam.png";
 import nike from "../../Assets/Projects/nike.png";
 import eminence from "../../Assets/Projects/eminence.png";
+import recreate from "../../Assets/Projects/recreate.png";
 
 function Projects() {
   return (
@@ -44,6 +45,17 @@ function Projects() {
 
           <Col md={4} className="project-card">
             <ProjectCard
+              imgPath={recreate}
+              isBlog={false}
+              title="Recreate Africa"
+              description="Storytelling website for a company based in Africa. Built with React, Tailwindcss"
+              // ghLink="https://github.com/imohh/recreate-africa"
+              demoLink="https://recreate-africa.vercel.app/"
+            />
+          </Col>
+
+          <Col md={4} className="project-card">
+            <ProjectCard
               imgPath={nike}
               isBlog={false}
               title="Nike Store"
@@ -63,19 +75,6 @@ function Projects() {
               demoLink="https://grep-website.vercel.app/"
             />
           </Col>
-
-
-          {/*<Col md={4} className="project-card">
-            <ProjectCard
-              imgPath={lends}
-              isBlog={false}
-              title="Lendsqr"
-              description="Admin Panel for Lendsqr company that shows the number of users fetched from a dummy API, fetched the data and displayed it in a table, 
-              and we caan view each user profile as well as search and filter users"
-              ghLink="https://github.com/imohh/lendsqr"
-              demoLink="https://imoh-precious-lendsqr-fe-test.vercel.app/"              
-            />
-          </Col>*/}
 
           <Col md={4} className="project-card">
             <ProjectCard
