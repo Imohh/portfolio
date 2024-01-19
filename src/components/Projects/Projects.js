@@ -50,7 +50,7 @@ function Projects() {
               title="Recreate Africa"
               description="Storytelling website for a company based in Africa. Built with React, Tailwindcss"
               // ghLink="https://github.com/imohh/recreate-africa"
-              demoLink="https://recreate-africa.vercel.app/"
+              demoLink="https://recreateafrica.org"
             />
           </Col>
 
