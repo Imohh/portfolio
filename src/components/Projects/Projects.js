@@ -9,6 +9,7 @@ import chekam from "../../Assets/Projects/chekam.png";
 import nike from "../../Assets/Projects/nike.png";
 import eminence from "../../Assets/Projects/eminence.png";
 import recreate from "../../Assets/Projects/recreate.png";
+import mickkycutz from "../../Assets/Projects/mickkycutz.png";
 
 function Projects() {
   return (
@@ -37,7 +38,7 @@ function Projects() {
               imgPath={eminence}
               isBlog={false}
               title="Eminence E-Commerce"
-              description="E-Commerce website for a high end luxury fashion brand based in the UK. Built with MERN Stack"
+              description="E-Commerce website for a high end luxury fashion brand based in the UK. Built with MERN Stack + Stripe"
               ghLink="https://github.com/imohh/ecommerce-server"
               demoLink="https://eminencebygtx.com"
             />
@@ -62,6 +63,17 @@ function Projects() {
               description="Fully functional E-Commerce website. Built with Vite + React, Tailwindcss, Redux"
               ghLink="https://github.com/imohh/nike-store"
               demoLink="https://nike-store-roan.vercel.app/"
+            />
+          </Col>
+
+          <Col md={4} className="project-card">
+            <ProjectCard
+              imgPath={glintz}
+              isBlog={false}
+              title="Mickkycutz"
+              description="E-Commerce website developed for a business in Lagos, Nigeria. Fully functional. Built with React, Mongodb, Nodejs, Paystack."
+              ghLink="https://github.com/imohh/mickkycutz"
+              demoLink="https://mickkycutz.africa"
             />
           </Col>
 
