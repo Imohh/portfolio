@@ -66,7 +66,7 @@ function Projects() {
             />
           </Col>
 
-          <Col md={4} className="project-card">
+{/*<Col md={4} className="project-card">
             <ProjectCard
               imgPath={glintz}
               isBlog={false}
@@ -75,7 +75,7 @@ function Projects() {
               ghLink="https://github.com/imohh/mickkycutz"
               demoLink="https://mickkycutz.africa"
             />
-          </Col>
+          </Col>*/}
 
           <Col md={4} className="project-card">
             <ProjectCard
@@ -88,7 +88,7 @@ function Projects() {
             />
           </Col>
 
-          <Col md={4} className="project-card">
+{/*<Col md={4} className="project-card">
             <ProjectCard
               imgPath={glintz}
               isBlog={false}
@@ -97,7 +97,7 @@ function Projects() {
               ghLink="https://github.com/imohh/glintz-route"
               demoLink="https://glintzphotography.org"
             />
-          </Col>
+          </Col>*/}
 
         </Row>
       </Container>
