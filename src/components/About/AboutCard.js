@@ -10,7 +10,7 @@ function AboutCard() {
           <p style={{ textAlign: "justify" }}>
             Hi Everyone, I am <span className="purple">Imoh Precious </span>
             based in <span className="purple">Lagos, Nigeria.</span>
-            <br/> My love for Finance and Technology made me purse a degree in Economics so I can have a blend of the finance world and use that to build awesome products in the tech space. FinTech has always been a field I have always loved.
+            <br/>My love for Finance and Technology made me purse a degree in Economics so I can have a blend of the finance world and use that to build awesome products in the tech space. FinTech has always been a field I have always loved.
             <br />
             Additionally, I am currently employed as a software developer at
             Chekam.com and Slerp.
