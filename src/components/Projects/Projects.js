@@ -68,7 +68,7 @@ function Projects() {
 
           <Col md={4} className="project-card">
             <ProjectCard
-              imgPath={glintz}
+              imgPath={mickkycutz}
               isBlog={false}
               title="Mickkycutz"
               description="E-Commerce website developed for a business in Lagos, Nigeria. Fully functional. Built with React, Mongodb, Nodejs, Paystack."
