@@ -66,7 +66,7 @@ function Projects() {
             />
           </Col>
 
-          {/*<Col md={4} className="project-card">
+          <Col md={4} className="project-card">
             <ProjectCard
               imgPath={mickkycutz}
               isBlog={false}
@@ -75,7 +75,7 @@ function Projects() {
               ghLink="https://github.com/imohh/mickkycutz"
               demoLink="https://mickkycutz.africa"
             />
-          </Col>*/}
+          </Col>
 
           <Col md={4} className="project-card">
             <ProjectCard
