@@ -10,6 +10,7 @@ import nike from "../../Assets/Projects/nike.png";
 import eminence from "../../Assets/Projects/eminence.png";
 import recreate from "../../Assets/Projects/recreate.png";
 import mickkycutz from "../../Assets/Projects/mickkycutz.png";
+import sopeadelaja from "../../Assets/Projects/sope.png";
 
 function Projects() {
   return (
@@ -52,6 +53,17 @@ function Projects() {
               description="Storytelling website for a company based in Africa. Built with React, Tailwindcss"
               // ghLink="https://github.com/imohh/recreate-africa"
               demoLink="https://recreateafrica.org"
+            />
+          </Col>
+
+          <Col md={4} className="project-card">
+            <ProjectCard
+              imgPath={sopeadelaja}
+              isBlog={false}
+              title="Sope Adelaja Portfolio"
+              description="Portfolio website for a creative professional. Built with MERN stack + Stripe"
+              // ghLink="https://github.com/imohh/nike-store"
+              demoLink="https://sopeadelaja.com/"
             />
           </Col>
 
