@@ -33,15 +33,15 @@ function Projects() {
               demoLink="https://chekam.com"
             />
           </Col>
-
+          
           <Col md={4} className="project-card">
             <ProjectCard
-              imgPath={eminence}
+              imgPath={sopeadelaja}
               isBlog={false}
-              title="Eminence E-Commerce"
-              description="E-Commerce website for a high end luxury fashion brand based in the UK. Built with MERN Stack + Stripe"
-              ghLink="https://github.com/imohh/ecommerce-server"
-              demoLink="https://eminencebygtx.com"
+              title="Sope Adelaja Portfolio"
+              description="Portfolio website for a creative professional. Built with MERN stack + Stripe"
+              // ghLink="https://github.com/imohh/nike-store"
+              demoLink="https://sopeadelaja.com/"
             />
           </Col>
 
@@ -58,25 +58,26 @@ function Projects() {
 
           <Col md={4} className="project-card">
             <ProjectCard
-              imgPath={sopeadelaja}
+              imgPath={eminence}
               isBlog={false}
-              title="Sope Adelaja Portfolio"
-              description="Portfolio website for a creative professional. Built with MERN stack + Stripe"
-              // ghLink="https://github.com/imohh/nike-store"
-              demoLink="https://sopeadelaja.com/"
+              title="Eminence E-Commerce"
+              description="E-Commerce website for a high end luxury fashion brand based in the UK. Built with MERN Stack + Stripe"
+              ghLink="https://github.com/imohh/ecommerce-server"
+              demoLink="https://eminencebygtx.com"
             />
           </Col>
 
           <Col md={4} className="project-card">
             <ProjectCard
-              imgPath={nike}
+              imgPath={glintz}
               isBlog={false}
-              title="Nike Store"
-              description="Fully functional E-Commerce website. Built with Vite + React, Tailwindcss, Redux"
-              ghLink="https://github.com/imohh/nike-store"
-              demoLink="https://nike-store-roan.vercel.app/"
+              title="Glintz Photography"
+              description="A photography website built with MERN Stack. With fully functional Admin Panel"
+              ghLink="https://github.com/imohh/glintz-route"
+              demoLink="https://glintzphotography.org"
             />
           </Col>
+          
 
           <Col md={4} className="project-card">
             <ProjectCard
@@ -102,12 +103,12 @@ function Projects() {
 
           <Col md={4} className="project-card">
             <ProjectCard
-              imgPath={glintz}
+              imgPath={nike}
               isBlog={false}
-              title="Glintz Photography"
-              description="A photography website built with MERN Stack. With fully functional Admin Panel"
-              ghLink="https://github.com/imohh/glintz-route"
-              demoLink="https://glintzphotography.org"
+              title="Nike Store"
+              description="Fully functional E-Commerce website. Built with Vite + React, Tailwindcss, Redux"
+              ghLink="https://github.com/imohh/nike-store"
+              demoLink="https://nike-store-roan.vercel.app/"
             />
           </Col>
 
