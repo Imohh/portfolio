@@ -9,9 +9,9 @@ import chekam from "../../Assets/Projects/chekam.png";
 import nike from "../../Assets/Projects/nike.png";
 import eminence from "../../Assets/Projects/eminence.png";
 import recreate from "../../Assets/Projects/recreate.png";
-import mickkycutz from "../../Assets/Projects/mickkycutz.png";
 import sopeadelaja from "../../Assets/Projects/sope.png";
 import joel from "../../Assets/Projects/joel.png";
+import oprime from "../../Assets/Projects/oprime.png";
 
 function Projects() {
   return (
@@ -92,12 +92,12 @@ function Projects() {
 
           <Col md={4} className="project-card">
             <ProjectCard
-              imgPath={mickkycutz}
+              imgPath={oprime}
               isBlog={false}
-              title="Mickkycutz"
-              description="E-Commerce website developed for a business in Lagos, Nigeria. Fully functional. Built with React, Mongodb, Nodejs, Paystack."
-              ghLink="https://github.com/imohh/mickkycutz"
-              demoLink="https://mickkycutz.africa"
+              title="Oprime Tech"
+              description="My tech startup where we make our client's visions come to life"
+              // ghLink="https://github.com/imohh/mickkycutz"
+              demoLink="https://oprimetech.com.ng"
             />
           </Col>
 
@@ -112,7 +112,7 @@ function Projects() {
             />
           </Col>
 
-          <Col md={4} className="project-card">
+          {/*<Col md={4} className="project-card">
             <ProjectCard
               imgPath={nike}
               isBlog={false}
@@ -121,7 +121,7 @@ function Projects() {
               ghLink="https://github.com/imohh/nike-store"
               demoLink="https://nike-store-roan.vercel.app/"
             />
-          </Col>
+          </Col>*/}
 
         </Row>
       </Container>
