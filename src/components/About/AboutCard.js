@@ -25,10 +25,10 @@ function AboutCard() {
               <ImPointRight /> Playing Table Tennis
             </li>
             <li className="about-activity">
-              <ImPointRight /> Conducting research to get new information I might never use, like I can identify at least 150 flags out of 194 countries in the world for no reason.
+              <ImPointRight /> Travelling
             </li>
             <li className="about-activity">
-              <ImPointRight /> Travelling
+              <ImPointRight /> Conducting research to get new information I might never use, like I can identify at least 150 flags out of 194 countries in the world for no reason.
             </li>
           </ul>
 

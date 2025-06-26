@@ -11,6 +11,7 @@ import eminence from "../../Assets/Projects/eminence.png";
 import recreate from "../../Assets/Projects/recreate.png";
 import mickkycutz from "../../Assets/Projects/mickkycutz.png";
 import sopeadelaja from "../../Assets/Projects/sope.png";
+import joel from "../../Assets/Projects/joel.png";
 
 function Projects() {
   return (
@@ -31,6 +32,16 @@ function Projects() {
               title="Chekam"
               description="Property listing website with filters that enables users search for properies with ease, built with React, Material-UI, Bootstrap and Firebase."
               demoLink="https://chekam.com"
+            />
+          </Col>
+
+          <Col md={4} className="project-card">
+            <ProjectCard
+              imgPath={joel}
+              isBlog={false}
+              title="Joel Adu Portfolio"
+              description="Portfolio website for a seasoned commercial photographer and advertising consultant."
+              demoLink="https://joeladu.com"
             />
           </Col>
           
