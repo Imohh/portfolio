@@ -96,7 +96,7 @@ function Projects() {
               isBlog={false}
               title="Oprime Tech"
               description="My tech startup where we make our client's visions come to life"
-              // ghLink="https://github.com/imohh/mickkycutz"
+              ghLink="https://github.com/Imohh/nextjs-portfolio"
               demoLink="https://oprimetech.com.ng"
             />
           </Col>
