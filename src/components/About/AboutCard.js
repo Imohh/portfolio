@@ -13,7 +13,7 @@ function AboutCard() {
             <br/>My love for Finance and Technology made me purse a degree in Economics so I can have a blend of the finance world and use that to build awesome products in the tech space. FinTech has always been a field I have always loved.
             <br />
             Additionally, I am currently employed as a software developer at
-            Chekam.com and Slerp.
+            Chekam.
             <br />
             I love to use my knowledge of tech to solve real life problems, find solutions, build products.
             <br />
