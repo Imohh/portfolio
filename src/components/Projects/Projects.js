@@ -6,7 +6,7 @@ import grep from "../../Assets/Projects/grep.png";
 import lends from "../../Assets/Projects/lends.png";
 import glintz from "../../Assets/Projects/glintz.png";
 import chekam from "../../Assets/Projects/chekam.png";
-import nike from "../../Assets/Projects/nike.png";
+// import nike from "../../Assets/Projects/nike.png";
 import eminence from "../../Assets/Projects/eminence.png";
 import recreate from "../../Assets/Projects/recreate.png";
 import sopeadelaja from "../../Assets/Projects/sope.png";
@@ -19,7 +19,7 @@ function Projects() {
     <Container fluid className="project-section">
       <Particle />
       <Container>
-        <h1 className="project-heading">
+        <h1 className="project-heading"> 
           My Recent <strong className="purple">Works </strong>
         </h1>
         <p style={{ color: "white" }}>
@@ -62,7 +62,6 @@ function Projects() {
               isBlog={false}
               title="Sope Adelaja Portfolio"
               description="Portfolio website for a creative professional. Built with MERN stack + Stripe"
-              // ghLink="https://github.com/imohh/nike-store"
               demoLink="https://sopeadelaja.com/"
             />
           </Col>
@@ -122,17 +121,6 @@ function Projects() {
               demoLink="https://grep-website.vercel.app/"
             />
           </Col>
-
-          {/*<Col md={4} className="project-card">
-            <ProjectCard
-              imgPath={nike}
-              isBlog={false}
-              title="Nike Store"
-              description="Fully functional E-Commerce website. Built with Vite + React, Tailwindcss, Redux"
-              ghLink="https://github.com/imohh/nike-store"
-              demoLink="https://nike-store-roan.vercel.app/"
-            />
-          </Col>*/}
 
         </Row>
       </Container>
