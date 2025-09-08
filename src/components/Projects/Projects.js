@@ -12,6 +12,7 @@ import recreate from "../../Assets/Projects/recreate.png";
 import sopeadelaja from "../../Assets/Projects/sope.png";
 import joel from "../../Assets/Projects/joel.png";
 import oprime from "../../Assets/Projects/oprime.png";
+import learnbuddie from "../../Assets/Projects/learnbuddie.png";
 
 function Projects() {
   return (
@@ -35,13 +36,23 @@ function Projects() {
             />
           </Col>
 
-          <Col md={4} className="project-card">
+          {/*<Col md={4} className="project-card">
             <ProjectCard
               imgPath={joel}
               isBlog={false}
               title="Joel Adu Portfolio"
               description="Portfolio website for a seasoned commercial photographer and advertising consultant."
               demoLink="https://joeladu.com"
+            />
+          </Col>*/}
+
+          <Col md={4} className="project-card">
+            <ProjectCard
+              imgPath={learnbuddie}
+              isBlog={false}
+              title="Learnbuddie"
+              description="A comprehensive learning platform for students."
+              demoLink="https://learnbuddie.com"
             />
           </Col>
           
