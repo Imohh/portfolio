@@ -1,99 +1,53 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom'
+import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom';
 
 const Sidebar = () => {
-	return (
-		<>
-			<div className="w-[25%] min-h-screen bg-black">
-				<div className="px-5 py-10">
-					{/*<img src={logo} alt="" className="w-[60%]" />*/}
-					<p className="uppercase">sope adelaja</p>
-				</div>
-				<ul className="text-white">
-					<NavLink to="/admin/home">
-						<li className="uppercase text-md px-5 py-4 border-t-[0.5px] hover:bg-gray-900" style={{fontFamily: "Muli"}}>
-							home
-						</li>
-					</NavLink>
-					<NavLink to="/admin/create">
-						<li className="uppercase text-md px-5 py-4 border-t-[0.5px] hover:bg-gray-900" style={{fontFamily: "Muli"}}>
-							create a blog post
-						</li>
-					</NavLink>
-					<NavLink to="/admin/blog">
-						<li className="uppercase text-md px-5 py-4 border-t-[0.5px] hover:bg-gray-900" style={{fontFamily: "Muli"}}>
-							blogs
-						</li>
-					</NavLink>
-					<NavLink to='/admin/upload-product'>
-						<li className="uppercase text-md px-5 py-4 border-t-[0.5px] hover:bg-gray-900" style={{fontFamily: "Muli"}}>
-							upload product
-						</li>
-					</NavLink>
-					<NavLink to="/admin/portfolio-title">
-						<li className="uppercase text-md px-5 py-4 border-t-[0.5px] hover:bg-gray-900" style={{fontFamily: "Muli"}}>
-							portfolio title
-						</li>
-					</NavLink>
-					<NavLink to='/admin/upload-to-portfolio'>
-						<li className="uppercase text-md px-5 py-4 border-t-[0.5px] hover:bg-gray-900" style={{fontFamily: "Muli"}}>
-							upload image to portolios
-						</li>
-					</NavLink>
-					<NavLink to='/admin/exhibition-title'>
-						<li className="uppercase text-md px-5 py-4 border-t-[0.5px] hover:bg-gray-900" style={{fontFamily: "Muli"}}>
-							exhibition title
-						</li>
-					</NavLink>
-					<NavLink to='/admin/upload-to-exhibition'>
-						<li className="uppercase text-md px-5 py-4 border-t-[0.5px] hover:bg-gray-900" style={{fontFamily: "Muli"}}>
-							upload image to exhibitions
-						</li>
-					</NavLink>
-					<NavLink to="/admin/on-set/">
-						<li className="uppercase text-md px-5 py-4 border-t-[0.5px] hover:bg-gray-900" style={{fontFamily: "Muli"}}>
-							on set
-						</li>
-					</NavLink>
-					<NavLink to="/admin/homepage-upload/">
-						<li className="uppercase text-md px-5 py-4 border-t-[0.5px] hover:bg-gray-900" style={{fontFamily: "Muli"}}>
-							homepage
-						</li>
-					</NavLink>
-					<NavLink to="/admin/contact">
-						<li className="uppercase text-md px-5 py-4 border-t-[0.5px] hover:bg-gray-900" style={{fontFamily: "Muli"}}>
-							contact form
-						</li>
-					</NavLink>
-					<NavLink to="/admin/academy">
-						<li className="uppercase text-md px-5 py-4 border-t-[0.5px] hover:bg-gray-900" style={{fontFamily: "Muli"}}>
-							academy form
-						</li>
-					</NavLink>
-					<NavLink to="/admin/subscribers">
-						<li className="uppercase text-md px-5 py-4 border-t-[0.5px] hover:bg-gray-900" style={{fontFamily: "Muli"}}>
-							subscribers
-						</li>
-					</NavLink>
-					<NavLink to="/admin/orders">
-						<li className="uppercase text-md px-5 py-4 border-t-[0.5px] hover:bg-gray-900" style={{fontFamily: "Muli"}}>
-							orders
-						</li>
-					</NavLink>
-					<NavLink to="/admin/users">
-						<li className="uppercase text-md px-5 py-4 border-t-[0.5px] hover:bg-gray-900" style={{fontFamily: "Muli"}}>
-							users
-						</li>
-					</NavLink>
-					<NavLink to="/admin/about">
-						<li className="uppercase text-md px-5 py-4 border-t-[0.5px] hover:bg-gray-900" style={{fontFamily: "Muli"}}>
-							about
-						</li>
-					</NavLink>
-				</ul>
-			</div>
-		</>
-	)
-}
+  const [hoverIndex, setHoverIndex] = useState(null);
 
-export default Sidebar
+  const liStyle = {
+    textTransform: 'uppercase',
+    fontSize: '16px',
+    padding: '16px 20px',
+    borderTop: '0.5px solid gray',
+    fontFamily: 'Muli',
+    cursor: 'pointer',
+    color: 'white',
+  };
+
+  const liHoverStyle = {
+    backgroundColor: '#1f2937', // Tailwind's gray-900
+  };
+
+  const sidebarLinks = [
+    { name: 'home', path: '/admin/home' },
+    { name: 'create a blog post', path: '/admin/create' },
+    { name: 'blogs', path: '/admin/blog' },
+    
+  ];
+
+  return (
+    <div style={{ width: '25%', minHeight: '100vh', backgroundColor: 'black' }}>
+      <div style={{ padding: '40px 20px' }}>
+        {/* <img src={logo} alt="" style={{ width: '60%' }} /> */}
+        <p style={{ textTransform: 'uppercase', color: 'white', fontFamily: 'Muli' }}>
+          sope adelaja
+        </p>
+      </div>
+      <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+        {sidebarLinks.map((link, index) => (
+          <NavLink key={index} to={link.path} style={{ textDecoration: 'none' }}>
+            <li
+              style={{ ...liStyle, ...(hoverIndex === index ? liHoverStyle : {}) }}
+              onMouseEnter={() => setHoverIndex(index)}
+              onMouseLeave={() => setHoverIndex(null)}
+            >
+              {link.name}
+            </li>
+          </NavLink>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default Sidebar;
