@@ -3,7 +3,6 @@ import Preloader from "../src/components/Pre";
 import Navbar from "./components/Navbar";
 import Home from "./components/Home/Home";
 import About from "./components/About/About";
-import Thoughts from "./components/Thoughts/BlogList.js";
 import BlogPost from "./components/Thoughts/BlogPost";
 import Projects from "./components/Projects/Projects";
 import Footer from "./components/Footer";
@@ -20,6 +19,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import "./style.css";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import BlogList from "./components/Thoughts/BlogList.js";
 
 function App() {
   const [load, upadateLoad] = useState(true);
@@ -43,7 +43,7 @@ function App() {
             <Route path="/project" element={<Projects />} />
             <Route path="/about" element={<About />} />
             <Route path="/resume" element={<Resume />} />
-            <Route path="/thoughts" element={<Thoughts />} />
+            <Route path="/thoughts" element={<BlogList />} />
             <Route path="/thoughts/:slug" element={<BlogPost />} />
             <Route path="/admin/blog" element={<Adminblog />} />
             <Route path="/admin/create" element={<CreatePost />} />

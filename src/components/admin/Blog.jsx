@@ -1,26 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import Post from './Post'
-import Sidebar from './components/Sidebar'
-import api from '../api'
+import Post from './Post';
+import Sidebar from './components/Sidebar';
+import api from '../api';
 
 const Blog = () => {
-  const [posts, setPosts] = useState([])
-
-  // const URL = import.meta.env.VITE_BASE_URL;
+  const [posts, setPosts] = useState([]);
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const response = await api.get('/post');
-        setPosts(response.data); // Axios auto-parses JSON
+        setPosts(response.data);
       } catch (error) {
         console.error('Error fetching posts:', error);
       }
     };
-
     fetchPosts();
   }, []);
-
 
   const handleDeletePost = async (postId) => {
     try {
@@ -36,18 +32,28 @@ const Blog = () => {
     }
   };
 
+  const containerStyle = { display: 'flex' };
+  const contentStyle = { width: '100%' };
+  const headerStyle = { padding: '16px 20px', backgroundColor: 'black', color: 'white', fontFamily: 'Muli' };
+  const postsGridStyle = {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(2, 1fr)',
+    gap: '16px',
+    padding: '40px 80px',
+  };
 
   return (
-    <div className="flex">
+    <div style={containerStyle}>
       <Sidebar />
-      <div className="w-full">
-        <div className="px-5 py-4 bg-black text-white">
-          <p className="capitalize text-lg" style={{fontFamily: "Muli"}}>welcome, admin</p>
+      <div style={contentStyle}>
+        <div style={headerStyle}>
+          <p style={{ textTransform: 'capitalize', fontSize: '18px' }}>welcome, admin</p>
         </div>
-        <div className="grid grid-cols-2  gap-4 px-20 py-10">
-          {posts.length > 0 && posts.map(post => (
-            <Post {...post} onDelete={handleDeletePost} />
-          ))}
+        <div style={postsGridStyle}>
+          {posts.length > 0 &&
+            posts.map((post) => (
+              <Post key={post._id} {...post} onDelete={handleDeletePost} />
+            ))}
         </div>
       </div>
     </div>

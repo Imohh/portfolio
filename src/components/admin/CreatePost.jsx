@@ -11,64 +11,61 @@ export default function CreatePost() {
   const [coverImage, setCoverImage] = useState('');
   const [blocks, setBlocks] = useState([]);
   const [redirect, setRedirect] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); 
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleCoverImageChange = (ev) => {
     const file = ev.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setCoverImage(reader.result);
-      };
+      reader.onloadend = () => setCoverImage(reader.result);
       reader.readAsDataURL(file);
     }
   };
 
   const addBlock = (type) => {
     const newBlock = {
-      id: `block-${Date.now()}`, // Using id instead of _id
+      id: `block-${Date.now()}`,
       type: type === 'text' ? 'text' : 'image',
       content: '',
       src: '',
-      caption: ''
+      caption: '',
     };
     setBlocks([...blocks, newBlock]);
   };
 
-
-  // Handle block content changes
   const updateBlock = (index, newContent) => {
     const updatedBlocks = [...blocks];
-    updatedBlocks[index] = { 
-      ...updatedBlocks[index], 
-      ...newContent,
-      id: updatedBlocks[index].id // Preserve the id
-    };
+    updatedBlocks[index] = { ...updatedBlocks[index], ...newContent, id: updatedBlocks[index].id };
     setBlocks(updatedBlocks);
   };
 
-  // Handle block deletion
   const deleteBlock = (index) => {
-    const updatedBlocks = blocks.filter((_, i) => i !== index);
-    setBlocks(updatedBlocks);
+    setBlocks(blocks.filter((_, i) => i !== index));
   };
 
-  // Handle drag-and-drop reordering
   const reorderBlocks = (result) => {
-    if (!result.destination) return; // Dropped outside the list
+    if (!result.destination) return;
     const reorderedBlocks = Array.from(blocks);
     const [movedBlock] = reorderedBlocks.splice(result.source.index, 1);
     reorderedBlocks.splice(result.destination.index, 0, movedBlock);
     setBlocks(reorderedBlocks);
   };
 
+  async function blobToBase64(blobUrl) {
+    const response = await fetch(blobUrl);
+    const blob = await response.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  }
 
-  
-  // Handle form submission
   async function createNewPost(ev) {
     ev.preventDefault();
+    setIsLoading(true);
 
-    // Process blocks to convert any blob URLs to base64
     const updatedBlocks = await Promise.all(
       blocks.map(async (block) => {
         if (block.type === 'image' && block.src.startsWith('blob:')) {
@@ -85,16 +82,10 @@ export default function CreatePost() {
     data.append('date', date);
     data.append('slug', slug);
     data.append('coverImage', coverImage);
-
     data.append('content', JSON.stringify(updatedBlocks));
 
     try {
-      const response = await fetch('http://localhost:4000/post', {
-      // const response = await fetch('https://sope-backend.vercel.app/post', {
-        method: 'POST',
-        body: data,
-      });
-
+      const response = await fetch('http://localhost:4000/post', { method: 'POST', body: data });
       if (response.ok) {
         setRedirect(true);
         alert('Blog post successfully created');
@@ -104,199 +95,108 @@ export default function CreatePost() {
     } catch (error) {
       console.error('Error creating blog post:', error);
       alert('An error occurred while creating the blog post');
+    } finally {
+      setIsLoading(false);
     }
   }
 
-  async function blobToBase64(blobUrl) {
-    const response = await fetch(blobUrl);
-    const blob = await response.blob();
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-  }
-  
+  if (redirect) return <Navigate to={'/admin/blog'} />;
 
-  if (redirect) {
-    return <Navigate to={'/admin/blog'} />;
-  }
+  const containerStyle = { display: 'flex' };
+  const contentStyle = { width: '100%' };
+  const headerStyle = { padding: '16px 20px', backgroundColor: 'black', color: 'white', fontFamily: 'Muli' };
+  const formContainerStyle = { padding: '24px' };
+  const inputStyle = { fontFamily: 'Muli', padding: '12px 16px', width: '100%', border: '1px solid black', marginBottom: '16px' };
+  const buttonStyle = { backgroundColor: 'black', color: 'white', padding: '12px 20px', textTransform: 'uppercase', fontFamily: 'Muli', cursor: 'pointer', marginTop: '16px', border: 'none' };
+  const hoverButtonStyle = { backgroundColor: '#1f2937' };
+  const blockStyle = { border: '1px dashed gray', padding: '16px', marginBottom: '16px' };
+  const textareaStyle = { width: '100%', padding: '8px', border: '1px solid gray', marginTop: '8px', fontFamily: 'Muli' };
 
   return (
-    <div className="flex">
+    <div style={containerStyle}>
       <Sidebar />
-      <div className="w-full">
-        <div className="px-5 py-4 bg-black text-white">
-          <p className="capitalize text-lg" style={{ fontFamily: 'Muli' }}>
-            Welcome, Admin
-          </p>
+      <div style={contentStyle}>
+        <div style={headerStyle}>
+          <p style={{ textTransform: 'capitalize', fontSize: '18px' }}>Welcome, Admin</p>
         </div>
-        <div className="p-6">
+        <div style={formContainerStyle}>
           <form onSubmit={createNewPost}>
-            <div className="mb-4">
-              <label className="block mb-2">Cover Image</label>
-              <input
-                type="file"
-                onChange={handleCoverImageChange}
-                accept="image/*"
-                className="mb-2"
-              />
-              {coverImage && (
-                <img
-                  src={coverImage}
-                  alt="Cover preview"
-                  className="max-w-md h-auto"
-                />
-              )}
+            <div style={{ marginBottom: '16px' }}>
+              <label style={{ display: 'block', marginBottom: '8px' }}>Cover Image</label>
+              <input type="file" onChange={handleCoverImageChange} accept="image/*" style={{ marginBottom: '8px' }} />
+              {coverImage && <img src={coverImage} alt="Cover preview" style={{ maxWidth: '400px', height: 'auto' }} />}
             </div>
-            <input
-              className="border border-solid border-black px-5 py-3 w-full"
-              style={{ fontFamily: 'Muli' }}
-              type="text"
-              placeholder="Name"
-              value={name}
-              onChange={(ev) => setName(ev.target.value)}
-            />
-            <br />
-            <br />
-            <input
-              className="border border-solid border-black px-5 py-3 w-full"
-              style={{ fontFamily: 'Muli' }}
-              type="text"
-              placeholder="Slug"
-              value={slug}
-              onChange={(ev) => setSlug(ev.target.value)}
-            />
-            <br />
-            <br />
-            <input
-              className="border border-solid border-black px-5 py-3 w-full"
-              style={{ fontFamily: 'Muli' }}
-              type="text"
-              placeholder="Category"
-              value={author}
-              onChange={(ev) => setAuthor(ev.target.value)}
-            />
-            <br />
-            <br />
-            <input
-              className="border border-solid border-black px-5 py-3 w-full"
-              style={{ fontFamily: 'Muli' }}
-              type="text"
-              placeholder="Date"
-              value={date}
-              onChange={(ev) => setDate(ev.target.value)}
-            />
-            <br />
-            <br />
-            <div className="flex space-x-4 mb-4">
-              <button
-                type="button"
-                onClick={() => addBlock('text')}
-                className="bg-gray-800 text-white px-4 py-2"
-              >
-                Add Text Block
-              </button>
-              <button
-                type="button"
-                onClick={() => addBlock('image')}
-                className="bg-gray-800 text-white px-4 py-2"
-              >
-                Add Image Block
-              </button>
+
+            <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} style={inputStyle} />
+            <input type="text" placeholder="Slug" value={slug} onChange={(e) => setSlug(e.target.value)} style={inputStyle} />
+            <input type="text" placeholder="Category" value={author} onChange={(e) => setAuthor(e.target.value)} style={inputStyle} />
+            <input type="text" placeholder="Date" value={date} onChange={(e) => setDate(e.target.value)} style={inputStyle} />
+
+            <div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
+              <button type="button" onClick={() => addBlock('text')} style={{ ...buttonStyle, backgroundColor: '#374151' }}>Add Text Block</button>
+              <button type="button" onClick={() => addBlock('image')} style={{ ...buttonStyle, backgroundColor: '#374151' }}>Add Image Block</button>
             </div>
+
             <DragDropContext onDragEnd={reorderBlocks}>
-              {blocks && blocks.length > 0 && (
-              <Droppable droppableId="blocks">
-                {(provided) => (
-                  <div
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                    className="space-y-4"
-                  >
-                    {blocks.map((block, index) => (
-                      <Draggable
-                        key={block.id}
-                        draggableId={block.id}
-                        index={index}
-                      >
-                        {(provided) => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            className="border border-dashed border-gray-400 p-4"
-                          >
-                            {block.type === 'text' ? (
-                              <textarea
-                                className="w-full border border-solid border-gray-400 p-2"
-                                placeholder="Write text here..."
-                                value={block.content}
-                                onChange={(ev) =>
-                                  updateBlock(index, { content: ev.target.value })
-                                }
-                              />
-                            ) : (
-                              <div>
-                                <input
-                                  type="file"
-                                  onChange={(ev) =>
-                                    updateBlock(index, {
-                                      src: URL.createObjectURL(ev.target.files[0]),
-                                    })
-                                  }
-                                />
-                                {block.src && (
-                                  <>
-                                    <img
-                                      src={block.src}
-                                      alt="Preview"
-                                      className="mt-2 max-w-full"
-                                    />
-                                    <textarea
-                                      className="w-full border border-solid border-gray-400 p-2 mt-2"
-                                      placeholder="Add a caption..."
-                                      value={block.caption}
-                                      onChange={(ev) =>
-                                        updateBlock(index, { caption: ev.target.value })
-                                      }
-                                    />
-                                  </>
-                                )}
-                              </div>
-                            )}
-                            <button
-                              type="button"
-                              onClick={() => deleteBlock(index)}
-                              className="mt-2 text-red-500 hover:underline"
+              {blocks.length > 0 && (
+                <Droppable droppableId="blocks">
+                  {(provided) => (
+                    <div {...provided.droppableProps} ref={provided.innerRef}>
+                      {blocks.map((block, index) => (
+                        <Draggable key={block.id} draggableId={block.id} index={index}>
+                          {(provided) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              style={{ ...blockStyle, ...provided.draggableProps.style }}
                             >
-                              Delete Block
-                            </button>
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
+                              {block.type === 'text' ? (
+                                <textarea
+                                  placeholder="Write text here..."
+                                  value={block.content}
+                                  onChange={(e) => updateBlock(index, { content: e.target.value })}
+                                  style={textareaStyle}
+                                />
+                              ) : (
+                                <div>
+                                  <input
+                                    type="file"
+                                    onChange={(e) => updateBlock(index, { src: URL.createObjectURL(e.target.files[0]) })}
+                                  />
+                                  {block.src && (
+                                    <>
+                                      <img src={block.src} alt="Preview" style={{ marginTop: '8px', maxWidth: '100%' }} />
+                                      <textarea
+                                        placeholder="Add a caption..."
+                                        value={block.caption}
+                                        onChange={(e) => updateBlock(index, { caption: e.target.value })}
+                                        style={textareaStyle}
+                                      />
+                                    </>
+                                  )}
+                                </div>
+                              )}
+                              <button
+                                type="button"
+                                onClick={() => deleteBlock(index)}
+                                style={{ color: 'red', marginTop: '8px', cursor: 'pointer', background: 'none', border: 'none', textDecoration: 'underline' }}
+                              >
+                                Delete Block
+                              </button>
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
               )}
             </DragDropContext>
-            <button
-              className="mt-5 bg-black text-white px-5 py-3 uppercase text-sm transition hover:bg-gray-900"
-              style={{ fontFamily: 'Muli' }}
-              type="submit"
-              disabled={isLoading} // Disable button during loading
-            >
-              {isLoading ? (
-                <div className="flex items-center space-x-2">
-                  <span className="loader border-t-transparent border-white border-4 rounded-full w-4 h-4"></span>
-                  <span>Creating...</span>
-                </div>
-              ) : (
-                'Create Post'
-              )}
+
+            <button type="submit" disabled={isLoading} style={{ ...buttonStyle, width: '100%' }}>
+              {isLoading ? 'Creating...' : 'Create Post'}
             </button>
           </form>
         </div>

@@ -30,7 +30,7 @@ const Sidebar = () => {
       <div style={{ padding: '40px 20px' }}>
         {/* <img src={logo} alt="" style={{ width: '60%' }} /> */}
         <p style={{ textTransform: 'uppercase', color: 'white', fontFamily: 'Muli' }}>
-          sope adelaja
+          Imoh Precious
         </p>
       </div>
       <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>

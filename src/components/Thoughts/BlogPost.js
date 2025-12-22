@@ -1,122 +1,99 @@
-import { useParams, Link } from 'react-router-dom';
-import { usePost, useComments, useAddComment } from '../../hooks/usePosts';
-import { format } from 'date-fns';
-import { ArrowLeft } from 'lucide-react';
-import CommentSection from '../CommentSection';
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 const BlogPost = () => {
   const { slug } = useParams();
-  const { data: post, isLoading, error } = usePost(slug || '');
-  const { data: comments } = useComments(slug || '');
-  const addComment = useAddComment(slug || '');
 
-  if (isLoading) {
+  const [post, setPost] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        console.log("Fetching post:", slug);
+
+        const response = await fetch(`http://localhost:4000/post/${slug}`);
+
+        if (!response.ok) {
+          throw new Error("Post not found");
+        }
+
+        const data = await response.json();
+        console.log("Post data:", data);
+
+        setPost(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPost();
+  }, [slug]);
+
+  if (loading) {
     return (
-      <div className="min-h-screen bg-background">
-        <div className="max-w-2xl mx-auto px-6 py-16">
-          <div className="animate-pulse space-y-6">
-            <div className="h-4 bg-muted rounded w-32" />
-            <div className="h-8 bg-muted rounded w-3/4" />
-            <div className="h-4 bg-muted rounded w-48" />
-            <div className="space-y-3 pt-8">
-              <div className="h-4 bg-muted rounded" />
-              <div className="h-4 bg-muted rounded" />
-              <div className="h-4 bg-muted rounded w-5/6" />
-            </div>
-          </div>
-        </div>
+      <div className="min-h-screen flex items-center justify-center bg-[#252525] text-white">
+        Loading post...
       </div>
     );
   }
 
-  if (error || !post) {
+  if (error) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-xl font-medium text-foreground mb-2">Post not found</h1>
-          <Link to="/blog" className="text-muted-foreground hover:text-foreground transition-colors">
-            ← Back to blog
-          </Link>
-        </div>
+      <div className="min-h-screen flex items-center justify-center bg-[#252525] text-red-400">
+        {error}
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b border-border">
-        <div className="max-w-2xl mx-auto px-6 py-8">
-          <Link 
-            to="/blog" 
-            className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to blog
-          </Link>
-        </div>
-      </header>
+    <>
+      <Helmet>
+        <title>{post.name} | Sope Adelaja</title>
+        <meta name="description" content={post.excerpt || post.name} />
+      </Helmet>
 
-      <article className="max-w-2xl mx-auto px-6 py-12">
-        <header className="mb-12">
-          <time className="text-sm text-muted-foreground">
-            {format(new Date(post.date), 'MMMM d, yyyy')}
-          </time>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-foreground">
+      <section className="bg-[#252525] min-h-screen px-[30px] xl:px-[240px] lg:px-[240px] py-16">
+        <div className="max-w-4xl mx-auto">
+          
+          {/* Cover Image */}
+          {post.coverImage && (
+            <div className="mb-10">
+              <img
+                src={post.coverImage}
+                alt={post.name}
+                className="w-full h-[420px] object-cover rounded-lg"
+              />
+            </div>
+          )}
+
+          {/* Title */}
+          <h1
+            className="text-[#c6b495] text-3xl xl:text-4xl mb-4 capitalize"
+            style={{ fontFamily: "BIZ UDPMincho" }}
+          >
             {post.name}
           </h1>
-          <p className="mt-2 text-muted-foreground">
-            By {post.author}
-          </p>
-        </header>
 
-        {post.coverImage && (
-          <img 
-            src={post.coverImage} 
-            alt={post.name}
-            className="w-full rounded-lg mb-12"
+          {/* Meta */}
+          <div className="flex items-center text-sm text-[#7f7564] mb-8">
+            <span>{post.date}</span>
+            <span className="px-2">//</span>
+            <span className="capitalize">{post.author}</span>
+          </div>
+
+          {/* Content */}
+          <article
+            className="text-[#d5c9b4] leading-8 text-[16px] space-y-6"
+            dangerouslySetInnerHTML={{ __html: post.content }}
           />
-        )}
-
-        <div className="prose prose-neutral dark:prose-invert max-w-none">
-          {post.content.map((block) => {
-            if (block.type === 'text') {
-              return (
-                <div 
-                  key={block.id} 
-                  className="text-foreground leading-relaxed mb-6 whitespace-pre-wrap"
-                  dangerouslySetInnerHTML={{ __html: block.content || '' }}
-                />
-              );
-            }
-            if (block.type === 'image') {
-              return (
-                <figure key={block.id} className="my-8">
-                  <img 
-                    src={block.src} 
-                    alt={block.caption || ''} 
-                    className="w-full rounded-lg"
-                  />
-                  {block.caption && (
-                    <figcaption className="mt-2 text-sm text-muted-foreground text-center">
-                      {block.caption}
-                    </figcaption>
-                  )}
-                </figure>
-              );
-            }
-            return null;
-          })}
         </div>
-      </article>
-
-      <section className="max-w-2xl mx-auto px-6 py-12 border-t border-border">
-        <CommentSection 
-          comments={comments || []} 
-          onSubmit={addComment.mutateAsync}
-          isSubmitting={addComment.isPending}
-        />
       </section>
-    </div>
+    </>
   );
 };
 
