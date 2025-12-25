@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react"
 import { Link } from 'react-router-dom'
 import { Helmet } from "react-helmet";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 const BlogList = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -9,7 +11,7 @@ const BlogList = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch('http://localhost:4000/post');
+      const response = await fetch(`${API_URL}/post`);
       console.log('Response status:', response.status)
       if (response.ok) {
         const data = await response.json();
