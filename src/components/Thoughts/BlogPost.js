@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import {
@@ -8,12 +8,12 @@ import {
   FaWhatsapp,
   FaEnvelope,
 } from "react-icons/fa";
+import { useBlogPost } from "../../hooks/useBlogPost"; // Adjust import path
 
 const BlogPost = () => {
   const { slug } = useParams();
+  const { post, comments, loading, error, addComment } = useBlogPost(slug);
 
-  const [post, setPost] = useState(null);
-  const [comments, setComments] = useState([]);
   const [showShareOptions, setShowShareOptions] = useState(false);
 
   const [name, setName] = useState("");
@@ -21,32 +21,8 @@ const BlogPost = () => {
   const [website, setWebsite] = useState("");
   const [newComment, setNewComment] = useState("");
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
   const postUrl = encodeURIComponent(window.location.href);
 
-  /* ---------------- FETCH POST + COMMENTS ---------------- */
-  useEffect(() => {
-    const fetchPost = async () => {
-      try {
-        const res = await fetch(`http://localhost:4000/post/${slug}`);
-        if (!res.ok) throw new Error("Post not found");
-
-        const data = await res.json();
-        setPost(data);
-        setComments(data.comments || []);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPost();
-  }, [slug]);
-
-  /* ---------------- ADD COMMENT ---------------- */
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
 
@@ -55,26 +31,15 @@ const BlogPost = () => {
       return;
     }
 
+    // Basic email validation (matches backend regex)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      alert("Invalid email format");
+      return;
+    }
+
     try {
-      const res = await fetch(
-        `http://localhost:4000/post/${slug}/comment`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            name,
-            email,
-            website,
-            text: newComment,
-          }),
-        }
-      );
-
-      if (!res.ok) throw new Error("Failed to post comment");
-
-      const updatedComments = await res.json();
-      setComments(updatedComments);
-
+      await addComment({ name, email, website, text: newComment });
       setName("");
       setEmail("");
       setWebsite("");
@@ -84,39 +49,9 @@ const BlogPost = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div style={{
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)",
-        color: "#ffffff",
-        fontSize: "1.125rem",
-        fontWeight: "300",
-        letterSpacing: "0.05em"
-      }}>
-        Loading post...
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div style={{
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)",
-        color: "#ff6b6b",
-        fontSize: "1.125rem"
-      }}>
-        {error}
-      </div>
-    );
-  }
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!post) return <div>Post not found</div>;
 
   return (
     <>
