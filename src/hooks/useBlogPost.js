@@ -1,4 +1,3 @@
-// hooks/useBlogPost.js
 import { useState, useEffect } from 'react';
 import { fetchPost, fetchComments, postComment } from '../api/postApi';
 

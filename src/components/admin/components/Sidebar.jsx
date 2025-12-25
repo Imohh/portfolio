@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 const Sidebar = () => {
   const [hoverIndex, setHoverIndex] = useState(null);
+  const navigate = useNavigate();
 
   const liStyle = {
     textTransform: 'uppercase',
@@ -18,11 +19,18 @@ const Sidebar = () => {
     backgroundColor: '#1f2937', // Tailwind's gray-900
   };
 
+  const handleLogout = () => {
+    // Remove token from localStorage
+    localStorage.removeItem('adminToken');
+    // Redirect to login page
+    navigate('/admin/login');
+  };
+
   const sidebarLinks = [
     { name: 'home', path: '/admin/home' },
     { name: 'create a blog post', path: '/admin/create' },
     { name: 'blogs', path: '/admin/blog' },
-    
+    { name: 'logout', action: handleLogout }, // use action instead of path
   ];
 
   return (
@@ -35,15 +43,15 @@ const Sidebar = () => {
       </div>
       <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
         {sidebarLinks.map((link, index) => (
-          <NavLink key={index} to={link.path} style={{ textDecoration: 'none' }}>
-            <li
-              style={{ ...liStyle, ...(hoverIndex === index ? liHoverStyle : {}) }}
-              onMouseEnter={() => setHoverIndex(index)}
-              onMouseLeave={() => setHoverIndex(null)}
-            >
-              {link.name}
-            </li>
-          </NavLink>
+          <li
+            key={index}
+            style={{ ...liStyle, ...(hoverIndex === index ? liHoverStyle : {}) }}
+            onMouseEnter={() => setHoverIndex(index)}
+            onMouseLeave={() => setHoverIndex(null)}
+            onClick={link.action ? link.action : undefined} // call action if defined
+          >
+            {link.action ? link.name : <NavLink to={link.path} style={{ textDecoration: 'none', color: 'inherit' }}>{link.name}</NavLink>}
+          </li>
         ))}
       </ul>
     </div>
