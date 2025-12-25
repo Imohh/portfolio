@@ -1,4 +1,3 @@
-// api/postsApi.js
 import {
   getPostEndpoint,
   getCommentsEndpoint,

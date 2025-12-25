@@ -1,8 +1,7 @@
-import axios from 'axios';
+import axios from "axios";
 
 const api = axios.create({
-  // baseURL: 'https://sope-backend.vercel.app',
-  baseURL: 'http://localhost:4000'
+  baseURL: process.env.REACT_APP_API_URL,
 });
 
 export default api;

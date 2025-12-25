@@ -20,6 +20,9 @@ import "./style.css";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import BlogList from "./components/Thoughts/BlogList.js";
+import AdminLogin from "./components/admin/Login.jsx";
+import AdminRoute from "./components/admin/AdminRoute";
+// import AdminRegister from "./components/admin/AdminRegister";
 
 function App() {
   const [load, upadateLoad] = useState(true);
@@ -45,8 +48,24 @@ function App() {
             <Route path="/resume" element={<Resume />} />
             <Route path="/thoughts" element={<BlogList />} />
             <Route path="/thoughts/:slug" element={<BlogPost />} />
-            <Route path="/admin/blog" element={<Adminblog />} />
-            <Route path="/admin/create" element={<CreatePost />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
+            {/* <Route path="/admin/register" element={<AdminRegister />} /> */}
+            <Route
+              path="/admin/blog"
+              element={
+                <AdminRoute>
+                  <Adminblog />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/create"
+              element={
+                <AdminRoute>
+                  <CreatePost />
+                </AdminRoute>
+              }
+            />
             <Route path="*" element={<Navigate to="/"/>} />
           </Routes>
           <Footer />

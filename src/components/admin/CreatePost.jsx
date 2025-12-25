@@ -3,6 +3,8 @@ import { Navigate } from 'react-router-dom';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Sidebar from './components/Sidebar';
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 export default function CreatePost() {
   const [name, setName] = useState('');
   const [author, setAuthor] = useState('');
@@ -13,6 +15,7 @@ export default function CreatePost() {
   const [redirect, setRedirect] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  
   const handleCoverImageChange = (ev) => {
     const file = ev.target.files[0];
     if (file) {
@@ -85,7 +88,7 @@ export default function CreatePost() {
     data.append('content', JSON.stringify(updatedBlocks));
 
     try {
-      const response = await fetch('http://localhost:4000/post', { method: 'POST', body: data });
+      const response = await fetch(`${API_URL}/post`, { method: 'POST', body: data });
       if (response.ok) {
         setRedirect(true);
         alert('Blog post successfully created');
