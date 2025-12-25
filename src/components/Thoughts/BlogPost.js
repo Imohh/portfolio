@@ -1,29 +1,41 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import {
+  FaShareAlt,
+  FaFacebook,
+  FaTwitter,
+  FaWhatsapp,
+  FaEnvelope,
+} from "react-icons/fa";
 
 const BlogPost = () => {
   const { slug } = useParams();
 
   const [post, setPost] = useState(null);
+  const [comments, setComments] = useState([]);
+  const [showShareOptions, setShowShareOptions] = useState(false);
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [website, setWebsite] = useState("");
+  const [newComment, setNewComment] = useState("");
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const postUrl = encodeURIComponent(window.location.href);
+
+  /* ---------------- FETCH POST + COMMENTS ---------------- */
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        console.log("Fetching post:", slug);
+        const res = await fetch(`http://localhost:4000/post/${slug}`);
+        if (!res.ok) throw new Error("Post not found");
 
-        const response = await fetch(`http://localhost:4000/post/${slug}`);
-
-        if (!response.ok) {
-          throw new Error("Post not found");
-        }
-
-        const data = await response.json();
-        console.log("Post data:", data);
-
+        const data = await res.json();
         setPost(data);
+        setComments(data.comments || []);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -34,9 +46,57 @@ const BlogPost = () => {
     fetchPost();
   }, [slug]);
 
+  /* ---------------- ADD COMMENT ---------------- */
+  const handleCommentSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!name || !email || !newComment) {
+      alert("Name, email and comment are required");
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        `http://localhost:4000/post/${slug}/comment`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name,
+            email,
+            website,
+            text: newComment,
+          }),
+        }
+      );
+
+      if (!res.ok) throw new Error("Failed to post comment");
+
+      const updatedComments = await res.json();
+      setComments(updatedComments);
+
+      setName("");
+      setEmail("");
+      setWebsite("");
+      setNewComment("");
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#252525] text-white">
+      <div style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)",
+        color: "#ffffff",
+        fontSize: "1.125rem",
+        fontWeight: "300",
+        letterSpacing: "0.05em"
+      }}>
         Loading post...
       </div>
     );
@@ -44,7 +104,15 @@ const BlogPost = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#252525] text-red-400">
+      <div style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)",
+        color: "#ff6b6b",
+        fontSize: "1.125rem"
+      }}>
         {error}
       </div>
     );
@@ -53,44 +121,449 @@ const BlogPost = () => {
   return (
     <>
       <Helmet>
-        <title>{post.name} | Sope Adelaja</title>
+        <title>{post.name} | Imoh Precious</title>
         <meta name="description" content={post.excerpt || post.name} />
       </Helmet>
 
-      <section className="bg-[#252525] min-h-screen px-[30px] xl:px-[240px] lg:px-[240px] py-16">
-        <div className="max-w-4xl mx-auto">
-          
-          {/* Cover Image */}
+      <section style={{
+        background: "linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)",
+        minHeight: "100vh",
+        padding: "8rem 1.25rem",
+        position: "relative",
+      }}>
+        <div style={{
+          maxWidth: "900px",
+          margin: "0 auto"
+        }}>
+          {/* SHARE BUTTON */}
+          <div style={{
+            position: "absolute",
+            top: "8rem",
+            right: "2rem",
+            zIndex: 10
+          }}>
+            <button
+              onClick={() => setShowShareOptions(!showShareOptions)}
+              style={{
+                padding: "0.875rem",
+                background: "linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)",
+                color: "#ffffff",
+                border: "none",
+                borderRadius: "50%",
+                cursor: "pointer",
+                boxShadow: "0 4px 15px rgba(139, 92, 246, 0.4)",
+                transition: "all 0.3s ease",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "1.125rem"
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "scale(1.1)";
+                e.currentTarget.style.boxShadow = "0 6px 20px rgba(139, 92, 246, 0.6)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "scale(1)";
+                e.currentTarget.style.boxShadow = "0 4px 15px rgba(139, 92, 246, 0.4)";
+              }}
+            >
+              <FaShareAlt />
+            </button>
+
+            {showShareOptions && (
+              <div style={{
+                position: "absolute",
+                right: 0,
+                marginTop: "0.75rem",
+                width: "220px",
+                background: "rgba(30, 30, 30, 0.98)",
+                backdropFilter: "blur(10px)",
+                borderRadius: "12px",
+                padding: "0.75rem",
+                boxShadow: "0 10px 40px rgba(0, 0, 0, 0.5)",
+                border: "1px solid rgba(139, 92, 246, 0.3)"
+              }}>
+                {[
+                  { icon: FaFacebook, label: "Facebook", color: "#1877f2", url: `https://www.facebook.com/sharer/sharer.php?u=${postUrl}` },
+                  { icon: FaTwitter, label: "Twitter", color: "#1da1f2", url: `https://twitter.com/intent/tweet?url=${postUrl}&text=${post.name}` },
+                  { icon: FaWhatsapp, label: "WhatsApp", color: "#25d366", url: `https://api.whatsapp.com/send?text=${post.name} ${postUrl}` },
+                  { icon: FaEnvelope, label: "Email", color: "#ea4335", url: `mailto:?subject=${post.name}&body=${postUrl}` }
+                ].map((social, idx) => (
+                  <a
+                    key={idx}
+                    href={social.url}
+                    target={social.label !== "Email" ? "_blank" : undefined}
+                    rel={social.label !== "Email" ? "noreferrer" : undefined}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.75rem",
+                      padding: "0.75rem",
+                      color: "#ffffff",
+                      textDecoration: "none",
+                      borderRadius: "8px",
+                      transition: "all 0.2s ease",
+                      fontSize: "0.95rem",
+                      fontWeight: "500"
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = "rgba(139, 92, 246, 0.15)";
+                      e.currentTarget.style.transform = "translateX(5px)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = "transparent";
+                      e.currentTarget.style.transform = "translateX(0)";
+                    }}
+                  >
+                    <social.icon style={{ color: social.color, fontSize: "1.25rem" }} />
+                    {social.label}
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* COVER IMAGE */}
           {post.coverImage && (
-            <div className="mb-10">
+            <div style={{
+              width: "100%",
+              height: "500px",
+              borderRadius: "16px",
+              overflow: "hidden",
+              marginBottom: "3rem",
+              boxShadow: "0 20px 60px rgba(0, 0, 0, 0.5)",
+              position: "relative"
+            }}>
               <img
                 src={post.coverImage}
                 alt={post.name}
-                className="w-full h-[420px] object-cover rounded-lg"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  transition: "transform 0.3s ease"
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.05)"}
+                onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
               />
+              <div style={{
+                position: "absolute",
+                bottom: 0,
+                left: 0,
+                right: 0,
+                height: "150px",
+                background: "linear-gradient(to top, rgba(26, 26, 26, 0.9) 0%, transparent 100%)"
+              }} />
             </div>
           )}
 
-          {/* Title */}
-          <h1
-            className="text-[#c6b495] text-3xl xl:text-4xl mb-4 capitalize"
-            style={{ fontFamily: "BIZ UDPMincho" }}
-          >
+          {/* TITLE */}
+          <h1 style={{
+            color: "#a78bfa",
+            fontSize: "3rem",
+            marginBottom: "1rem",
+            textTransform: "capitalize",
+            fontWeight: "700",
+            lineHeight: "1.2",
+            letterSpacing: "-0.02em",
+            textShadow: "0 2px 10px rgba(139, 92, 246, 0.3)"
+          }}>
             {post.name}
           </h1>
 
-          {/* Meta */}
-          <div className="flex items-center text-sm text-[#7f7564] mb-8">
+          {/* META */}
+          <div style={{
+            fontSize: "0.95rem",
+            color: "#999999",
+            marginBottom: "3rem",
+            display: "flex",
+            alignItems: "center",
+            gap: "0.75rem",
+            borderLeft: "3px solid #8b5cf6",
+            paddingLeft: "1rem",
+            fontWeight: "300"
+          }}>
             <span>{post.date}</span>
-            <span className="px-2">//</span>
-            <span className="capitalize">{post.author}</span>
+            <span style={{ color: "#8b5cf6" }}>•</span>
+            <span style={{ textTransform: "capitalize" }}>{post.author}</span>
           </div>
 
-          {/* Content */}
-          <article
-            className="text-[#d5c9b4] leading-8 text-[16px] space-y-6"
-            dangerouslySetInnerHTML={{ __html: post.content }}
-          />
+          {/* CONTENT BLOCKS */}
+          <div style={{
+            color: "#e0e0e0",
+            lineHeight: "1.9",
+            fontSize: "1.125rem",
+            fontWeight: "300"
+          }}>
+            {post.content?.map((block, index) => {
+              if (block.text || block.content) {
+                return (
+                  <p key={index} style={{
+                    marginBottom: "1.75rem",
+                    textAlign: "justify"
+                  }}>
+                    {block.text || block.content}
+                  </p>
+                );
+              }
+
+              if (block.src) {
+                return (
+                  <div key={index} style={{ marginBottom: "2.5rem" }}>
+                    <div style={{
+                      borderRadius: "12px",
+                      overflow: "hidden",
+                      boxShadow: "0 10px 30px rgba(0, 0, 0, 0.4)"
+                    }}>
+                      <img
+                        src={block.src}
+                        alt=""
+                        style={{
+                          width: "100%",
+                          display: "block",
+                          transition: "transform 0.3s ease"
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.02)"}
+                        onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
+                      />
+                    </div>
+                    {block.caption && (
+                      <p style={{
+                        textAlign: "center",
+                        fontSize: "0.9rem",
+                        fontStyle: "italic",
+                        marginTop: "0.75rem",
+                        color: "#999999"
+                      }}>
+                        {block.caption}
+                      </p>
+                    )}
+                  </div>
+                );
+              }
+
+              return null;
+            })}
+          </div>
+
+          {/* COMMENTS SECTION */}
+          <div style={{
+            marginTop: "5rem",
+            paddingTop: "3rem",
+            borderTop: "1px solid rgba(139, 92, 246, 0.2)"
+          }}>
+            <h2 style={{
+              fontSize: "2rem",
+              color: "#a78bfa",
+              marginBottom: "2.5rem",
+              fontWeight: "600",
+              letterSpacing: "0.05em"
+            }}>
+              Comments ({comments.length})
+            </h2>
+
+            {comments.length ? (
+              <div style={{ marginBottom: "3rem" }}>
+                {comments.map((c, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      marginBottom: "1.5rem",
+                      padding: "1.5rem",
+                      background: "rgba(30, 30, 30, 0.6)",
+                      backdropFilter: "blur(10px)",
+                      borderRadius: "12px",
+                      border: "1px solid rgba(255, 255, 255, 0.05)",
+                      transition: "all 0.3s ease"
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = "rgba(30, 30, 30, 0.8)";
+                      e.currentTarget.style.borderColor = "rgba(139, 92, 246, 0.3)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = "rgba(30, 30, 30, 0.6)";
+                      e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.05)";
+                    }}
+                  >
+                    <p style={{
+                      fontWeight: "600",
+                      textTransform: "capitalize",
+                      color: "#a78bfa",
+                      marginBottom: "0.5rem",
+                      fontSize: "1.05rem"
+                    }}>
+                      {c.name}
+                    </p>
+                    <p style={{
+                      color: "#cccccc",
+                      lineHeight: "1.7",
+                      fontSize: "1rem"
+                    }}>
+                      {c.text}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p style={{
+                color: "#999999",
+                fontStyle: "italic",
+                marginBottom: "3rem",
+                fontSize: "1rem"
+              }}>
+                No comments yet. Be the first to share your thoughts!
+              </p>
+            )}
+
+            {/* COMMENT FORM */}
+            <form onSubmit={handleCommentSubmit}>
+              <h3 style={{
+                fontSize: "1.5rem",
+                color: "#ffffff",
+                marginBottom: "1.5rem",
+                fontWeight: "500"
+              }}>
+                Leave a Comment
+              </h3>
+
+              <div style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+                gap: "1rem",
+                marginBottom: "1rem"
+              }}>
+                <input
+                  placeholder="Name*"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  style={{
+                    padding: "1rem 1.25rem",
+                    background: "rgba(30, 30, 30, 0.6)",
+                    backdropFilter: "blur(10px)",
+                    border: "1px solid rgba(255, 255, 255, 0.1)",
+                    borderRadius: "10px",
+                    color: "#ffffff",
+                    fontSize: "1rem",
+                    outline: "none",
+                    transition: "all 0.3s ease"
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = "#8b5cf6";
+                    e.target.style.background = "rgba(30, 30, 30, 0.8)";
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = "rgba(255, 255, 255, 0.1)";
+                    e.target.style.background = "rgba(30, 30, 30, 0.6)";
+                  }}
+                />
+                <input
+                  placeholder="Email*"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  style={{
+                    padding: "1rem 1.25rem",
+                    background: "rgba(30, 30, 30, 0.6)",
+                    backdropFilter: "blur(10px)",
+                    border: "1px solid rgba(255, 255, 255, 0.1)",
+                    borderRadius: "10px",
+                    color: "#ffffff",
+                    fontSize: "1rem",
+                    outline: "none",
+                    transition: "all 0.3s ease"
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = "#8b5cf6";
+                    e.target.style.background = "rgba(30, 30, 30, 0.8)";
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = "rgba(255, 255, 255, 0.1)";
+                    e.target.style.background = "rgba(30, 30, 30, 0.6)";
+                  }}
+                />
+                <input
+                  placeholder="Website"
+                  value={website}
+                  onChange={(e) => setWebsite(e.target.value)}
+                  style={{
+                    padding: "1rem 1.25rem",
+                    background: "rgba(30, 30, 30, 0.6)",
+                    backdropFilter: "blur(10px)",
+                    border: "1px solid rgba(255, 255, 255, 0.1)",
+                    borderRadius: "10px",
+                    color: "#ffffff",
+                    fontSize: "1rem",
+                    outline: "none",
+                    transition: "all 0.3s ease"
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = "#8b5cf6";
+                    e.target.style.background = "rgba(30, 30, 30, 0.8)";
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = "rgba(255, 255, 255, 0.1)";
+                    e.target.style.background = "rgba(30, 30, 30, 0.6)";
+                  }}
+                />
+              </div>
+
+              <textarea
+                rows="5"
+                placeholder="Your comment..."
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                style={{
+                  width: "100%",
+                  padding: "1rem 1.25rem",
+                  background: "rgba(30, 30, 30, 0.6)",
+                  backdropFilter: "blur(10px)",
+                  border: "1px solid rgba(255, 255, 255, 0.1)",
+                  borderRadius: "10px",
+                  color: "#ffffff",
+                  fontSize: "1rem",
+                  outline: "none",
+                  resize: "vertical",
+                  fontFamily: "inherit",
+                  marginBottom: "1.5rem",
+                  transition: "all 0.3s ease"
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = "#8b5cf6";
+                  e.target.style.background = "rgba(30, 30, 30, 0.8)";
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = "rgba(255, 255, 255, 0.1)";
+                  e.target.style.background = "rgba(30, 30, 30, 0.6)";
+                }}
+              />
+
+              <button
+                type="submit"
+                style={{
+                  background: "linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)",
+                  color: "#ffffff",
+                  padding: "0.875rem 2.5rem",
+                  borderRadius: "10px",
+                  border: "none",
+                  fontWeight: "600",
+                  fontSize: "1rem",
+                  cursor: "pointer",
+                  boxShadow: "0 4px 15px rgba(139, 92, 246, 0.4)",
+                  transition: "all 0.3s ease",
+                  letterSpacing: "0.05em"
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "translateY(-2px)";
+                  e.currentTarget.style.boxShadow = "0 6px 20px rgba(139, 92, 246, 0.6)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow = "0 4px 15px rgba(139, 92, 246, 0.4)";
+                }}
+              >
+                Post Comment
+              </button>
+            </form>
+          </div>
         </div>
       </section>
     </>
