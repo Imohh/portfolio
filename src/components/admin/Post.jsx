@@ -3,8 +3,7 @@ import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
 
 const Post = ({ _id, name, summary, content, coverImage, date, createdAt, onDelete }) => {
-  const formatDate = format(new Date(createdAt), 'MMM d, yyyy HH:mm');
-
+  
   const containerStyle = {
     padding: '16px',
     display: 'flex',
