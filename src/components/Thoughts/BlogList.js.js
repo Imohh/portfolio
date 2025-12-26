@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react"
 import { Link } from 'react-router-dom'
 import { Helmet } from "react-helmet";
 
-const API_URL = process.env.REACT_APP_API_URL;
-
 const BlogList = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
