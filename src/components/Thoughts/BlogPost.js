@@ -8,7 +8,7 @@ import {
   FaWhatsapp,
   FaEnvelope,
 } from "react-icons/fa";
-import { useBlogPost } from "../../hooks/useBlogPost";
+import { useBlogPost } from "../../hooks/useBlogPost"; // Adjust import path
 
 const BlogPost = () => {
   const { slug } = useParams();
@@ -31,6 +31,7 @@ const BlogPost = () => {
       return;
     }
 
+    // Basic email validation (matches backend regex)
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       alert("Invalid email format");
@@ -157,46 +158,6 @@ const BlogPost = () => {
             )}
           </div>
 
-          {/* TITLE AND DATE */}
-          <div style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-start",
-            marginBottom: "2rem",
-            gap: "2rem",
-            flexWrap: "wrap"
-          }}>
-            <h1 style={{
-              color: "#a78bfa",
-              fontSize: "3rem",
-              margin: 0,
-              textTransform: "capitalize",
-              fontWeight: "700",
-              lineHeight: "1.2",
-              letterSpacing: "-0.02em",
-              textShadow: "0 2px 10px rgba(139, 92, 246, 0.3)",
-              flex: "1 1 auto"
-            }}>
-              {post.name}
-            </h1>
-
-            <div style={{
-              fontSize: "0.95rem",
-              color: "#999999",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-end",
-              gap: "0.5rem",
-              fontWeight: "300",
-              paddingTop: "0.5rem"
-            }}>
-              <span>{post.date}</span>
-              <span style={{ textTransform: "capitalize", color: "#8b5cf6" }}>
-                {post.author}
-              </span>
-            </div>
-          </div>
-
           {/* COVER IMAGE */}
           {post.coverImage && (
             <div style={{
@@ -230,6 +191,37 @@ const BlogPost = () => {
               }} />
             </div>
           )}
+
+          {/* TITLE */}
+          <h1 style={{
+            color: "#a78bfa",
+            fontSize: "3rem",
+            marginBottom: "1rem",
+            textTransform: "capitalize",
+            fontWeight: "700",
+            lineHeight: "1.2",
+            letterSpacing: "-0.02em",
+            textShadow: "0 2px 10px rgba(139, 92, 246, 0.3)"
+          }}>
+            {post.name}
+          </h1>
+
+          {/* META */}
+          <div style={{
+            fontSize: "0.95rem",
+            color: "#999999",
+            marginBottom: "3rem",
+            display: "flex",
+            alignItems: "center",
+            gap: "0.75rem",
+            borderLeft: "3px solid #8b5cf6",
+            paddingLeft: "1rem",
+            fontWeight: "300"
+          }}>
+            <span>{post.date}</span>
+            <span style={{ color: "#8b5cf6" }}>•</span>
+            <span style={{ textTransform: "capitalize" }}>{post.author}</span>
+          </div>
 
           {/* CONTENT BLOCKS */}
           <div style={{
@@ -328,38 +320,19 @@ const BlogPost = () => {
                       e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.05)";
                     }}
                   >
-                    <div style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      marginBottom: "0.75rem",
-                      flexWrap: "wrap",
-                      gap: "0.5rem"
+                    <p style={{
+                      fontWeight: "600",
+                      textTransform: "capitalize",
+                      color: "#a78bfa",
+                      marginBottom: "0.5rem",
+                      fontSize: "1.05rem"
                     }}>
-                      <p style={{
-                        fontWeight: "600",
-                        textTransform: "capitalize",
-                        color: "#a78bfa",
-                        margin: 0,
-                        fontSize: "1.05rem"
-                      }}>
-                        {c.name}
-                      </p>
-                      {c.date && (
-                        <span style={{
-                          fontSize: "0.85rem",
-                          color: "#999999",
-                          fontWeight: "300"
-                        }}>
-                          {c.date}
-                        </span>
-                      )}
-                    </div>
+                      {c.name}
+                    </p>
                     <p style={{
                       color: "#cccccc",
                       lineHeight: "1.7",
-                      fontSize: "1rem",
-                      margin: 0
+                      fontSize: "1rem"
                     }}>
                       {c.text}
                     </p>
