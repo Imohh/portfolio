@@ -7,6 +7,16 @@ const BlogList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const isMobile = windowWidth < 768;
+
   const fetchProducts = async () => {
     try {
       const response = await fetch('https://portfolio-backend-wheat-three.vercel.app/post');
@@ -40,7 +50,7 @@ const BlogList = () => {
         justifyContent: "center",
         background: "linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)",
         color: "#ffffff",
-        fontSize: "1.125rem",
+        fontSize: isMobile ? "1rem" : "1.125rem",
         fontWeight: "300",
         letterSpacing: "0.05em"
       }}>
@@ -58,7 +68,7 @@ const BlogList = () => {
         justifyContent: "center",
         background: "linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)",
         color: "#ff6b6b",
-        fontSize: "1.125rem"
+        fontSize: isMobile ? "1rem" : "1.125rem"
       }}>
         {error}
       </div>
@@ -73,7 +83,7 @@ const BlogList = () => {
       </Helmet>
 
       <section style={{
-        paddingBottom: "6rem",
+        paddingBottom: isMobile ? "4rem" : "6rem",
         background: "linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)",
         minHeight: "100vh",
         position: "relative",
@@ -82,40 +92,41 @@ const BlogList = () => {
         {/* Decorative background elements */}
         <div style={{
           position: "absolute",
-          top: "-100px",
-          right: "-100px",
-          width: "400px",
-          height: "400px",
+          top: isMobile ? "-50px" : "-100px",
+          right: isMobile ? "-50px" : "-100px",
+          width: isMobile ? "200px" : "400px",
+          height: isMobile ? "200px" : "400px",
           background: "radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%)",
           borderRadius: "50%",
           pointerEvents: "none"
         }} />
         <div style={{
           position: "absolute",
-          bottom: "-150px",
-          left: "-150px",
-          width: "500px",
-          height: "500px",
+          bottom: isMobile ? "-75px" : "-150px",
+          left: isMobile ? "-75px" : "-150px",
+          width: isMobile ? "250px" : "500px",
+          height: isMobile ? "250px" : "500px",
           background: "radial-gradient(circle, rgba(168, 85, 247, 0.12) 0%, transparent 70%)",
           borderRadius: "50%",
           pointerEvents: "none"
         }} />
 
         <div style={{
-          maxWidth: "1400px",
+          maxWidth: isMobile ? "100%" : "1400px",
           margin: "0 auto",
-          padding: "1rem 1.875rem",
+          padding: isMobile ? "1rem" : "1rem 1.875rem",
           position: "relative",
           zIndex: 1
         }}>
           {/* Header */}
           <div style={{
-            padding: "3rem 0",
-            marginBottom: "3rem",
+            padding: isMobile ? "2rem 0" : "3rem 0",
+            marginTop: isMobile ? "4rem" : "3rem",
+            marginBottom: isMobile ? "2rem" : "3rem",
             borderBottom: "1px solid rgba(139, 92, 246, 0.2)"
           }}>
             <h2 style={{
-              fontSize: "2.5rem",
+              fontSize: isMobile ? "1.8rem" : "2.5rem",
               fontWeight: "700",
               color: "#a78bfa",
               letterSpacing: "0.15em",
@@ -143,7 +154,7 @@ const BlogList = () => {
             }}>
               <div style={{
                 textAlign: "center",
-                padding: "3rem",
+                padding: isMobile ? "2rem" : "3rem",
                 background: "rgba(30, 30, 30, 0.6)",
                 backdropFilter: "blur(10px)",
                 borderRadius: "16px",
@@ -151,7 +162,7 @@ const BlogList = () => {
               }}>
                 <p style={{
                   color: "#999999",
-                  fontSize: "1.125rem",
+                  fontSize: isMobile ? "1rem" : "1.125rem",
                   fontWeight: "300",
                   letterSpacing: "0.05em"
                 }}>
@@ -163,8 +174,8 @@ const BlogList = () => {
             <div style={{
               display: "grid",
               gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
-              gap: "2rem",
-              marginBottom: "3.5rem"
+              gap: isMobile ? "1.5rem" : "2rem",
+              marginBottom: isMobile ? "2.5rem" : "3.5rem"
             }}>
               {products.map((post) => (
                 <Link 
@@ -187,22 +198,26 @@ const BlogList = () => {
                     position: "relative"
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = "translateY(-8px)";
-                    e.currentTarget.style.boxShadow = "0 20px 40px rgba(139, 92, 246, 0.3)";
-                    e.currentTarget.style.borderColor = "rgba(139, 92, 246, 0.5)";
-                    e.currentTarget.style.background = "rgba(30, 30, 30, 0.7)";
+                    if (!isMobile) {
+                      e.currentTarget.style.transform = "translateY(-8px)";
+                      e.currentTarget.style.boxShadow = "0 20px 40px rgba(139, 92, 246, 0.3)";
+                      e.currentTarget.style.borderColor = "rgba(139, 92, 246, 0.5)";
+                      e.currentTarget.style.background = "rgba(30, 30, 30, 0.7)";
+                    }
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = "translateY(0)";
-                    e.currentTarget.style.boxShadow = "none";
-                    e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.05)";
-                    e.currentTarget.style.background = "rgba(30, 30, 30, 0.4)";
+                    if (!isMobile) {
+                      e.currentTarget.style.transform = "translateY(0)";
+                      e.currentTarget.style.boxShadow = "none";
+                      e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.05)";
+                      e.currentTarget.style.background = "rgba(30, 30, 30, 0.4)";
+                    }
                   }}
                   >
                     {/* Image Container */}
                     <div style={{
                       position: "relative",
-                      height: "280px",
+                      height: isMobile ? "220px" : "280px",
                       overflow: "hidden"
                     }}>
                       <img 
@@ -215,10 +230,14 @@ const BlogList = () => {
                           transition: "transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)"
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.transform = "scale(1.15)";
+                          if (!isMobile) {
+                            e.currentTarget.style.transform = "scale(1.15)";
+                          }
                         }}
                         onMouseLeave={(e) => {
-                          e.currentTarget.style.transform = "scale(1)";
+                          if (!isMobile) {
+                            e.currentTarget.style.transform = "scale(1)";
+                          }
                         }}
                       />
 
@@ -248,18 +267,22 @@ const BlogList = () => {
                           transition: "opacity 0.4s ease"
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.opacity = "1";
+                          if (!isMobile) {
+                            e.currentTarget.style.opacity = "1";
+                          }
                         }}
                         onMouseLeave={(e) => {
-                          e.currentTarget.style.opacity = "0";
+                          if (!isMobile) {
+                            e.currentTarget.style.opacity = "0";
+                          }
                         }}
                       >
                         <span style={{
                           color: "#ffffff",
-                          fontSize: "1rem",
+                          fontSize: isMobile ? "0.9rem" : "1rem",
                           fontWeight: "700",
                           background: "linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)",
-                          padding: "0.875rem 2rem",
+                          padding: isMobile ? "0.75rem 1.5rem" : "0.875rem 2rem",
                           borderRadius: "8px",
                           letterSpacing: "0.1em",
                           textTransform: "uppercase",
@@ -273,12 +296,12 @@ const BlogList = () => {
 
                     {/* Post Details */}
                     <div style={{
-                      padding: "1.75rem",
+                      padding: isMobile ? "1.25rem" : "1.75rem",
                       textAlign: "center"
                     }}>
                       <h4 style={{
                         color: "#a78bfa",
-                        fontSize: "1.25rem",
+                        fontSize: isMobile ? "1.1rem" : "1.25rem",
                         lineHeight: "1.6",
                         marginBottom: "1rem",
                         textTransform: "capitalize",
@@ -292,10 +315,14 @@ const BlogList = () => {
                         overflow: "hidden"
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.color = "#c4b5fd";
+                        if (!isMobile) {
+                          e.currentTarget.style.color = "#c4b5fd";
+                        }
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.color = "#a78bfa";
+                        if (!isMobile) {
+                          e.currentTarget.style.color = "#a78bfa";
+                        }
                       }}
                       >
                         {post.name}
@@ -306,7 +333,7 @@ const BlogList = () => {
                         alignItems: "center",
                         justifyContent: "center",
                         gap: "0.75rem",
-                        fontSize: "0.875rem",
+                        fontSize: isMobile ? "0.8rem" : "0.875rem",
                         color: "#999999",
                         fontWeight: "400"
                       }}>
@@ -326,10 +353,14 @@ const BlogList = () => {
                           transition: "color 0.3s ease"
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.color = "#cccccc";
+                          if (!isMobile) {
+                            e.currentTarget.style.color = "#cccccc";
+                          }
                         }}
                         onMouseLeave={(e) => {
-                          e.currentTarget.style.color = "#999999";
+                          if (!isMobile) {
+                            e.currentTarget.style.color = "#999999";
+                          }
                         }}
                         >
                           {post.author}
@@ -346,7 +377,9 @@ const BlogList = () => {
                         transition: "opacity 0.3s ease"
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.opacity = "1";
+                        if (!isMobile) {
+                          e.currentTarget.style.opacity = "1";
+                        }
                       }}
                       />
                     </div>
