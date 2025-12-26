@@ -11,7 +11,7 @@ const BlogList = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch(`${API_URL}/post`);
+      const response = await fetch('https://portfolio-backend-wheat-three.vercel.app/post');
       console.log('Response status:', response.status)
       if (response.ok) {
         const data = await response.json();
