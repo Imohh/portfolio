@@ -1,7 +1,7 @@
 const API_URL = process.env.REACT_APP_API_URL;
 
 export const loginAdmin = async (data) => {
-  const res = await fetch(`${API_URL}/admin/login`, {
+  const res = await fetch('https://portfolio-backend-wheat-three.vercel.app/admin/login', {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
@@ -10,7 +10,7 @@ export const loginAdmin = async (data) => {
 };
 
 export const registerAdmin = async (data) => {
-  const res = await fetch(`${API_URL}/admin/register`, {
+  const res = await fetch('https://portfolio-backend-wheat-three.vercel.app/admin/register', {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),

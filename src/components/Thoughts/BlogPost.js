@@ -66,7 +66,9 @@ const BlogPost = () => {
   return (
     <>
       <Helmet>
-        <title>{post.name} | Imoh Precious</title>
+        <title style={{
+          textTransform: "capitalize"
+        }}>{post.name} | Imoh Precious</title>
         <meta name="description" content={post.excerpt || post.name} />
       </Helmet>
 

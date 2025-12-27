@@ -88,7 +88,7 @@ export default function CreatePost() {
     data.append('content', JSON.stringify(updatedBlocks));
 
     try {
-      const response = await fetch(`${API_URL}/post`, { method: 'POST', body: data });
+      const response = await fetch('https://portfolio-backend-wheat-three.vercel.app/post', { method: 'POST', body: data });
       if (response.ok) {
         setRedirect(true);
         alert('Blog post successfully created');
