@@ -338,9 +338,7 @@ export default function CreatePost() {
                 }}>
                   Category
                 </label>
-                <input 
-                  type="text"
-                  placeholder="Enter category..."
+                <select
                   value={author}
                   onChange={(e) => setAuthor(e.target.value)}
                   style={{
@@ -354,7 +352,14 @@ export default function CreatePost() {
                     fontSize: '15px',
                     outline: 'none',
                     transition: 'all 0.3s ease',
-                    boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)'
+                    boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
+                    cursor: 'pointer',
+                    appearance: 'none',
+                    backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2360a5fa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")`,
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'right 12px center',
+                    backgroundSize: '20px',
+                    paddingRight: '40px'
                   }}
                   onFocus={(e) => {
                     e.target.style.borderColor = 'rgba(59, 130, 246, 0.5)';
@@ -364,7 +369,20 @@ export default function CreatePost() {
                     e.target.style.borderColor = 'rgba(59, 130, 246, 0.2)';
                     e.target.style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.2)';
                   }}
-                />
+                >
+                  <option value="" style={{ background: '#1e293b', color: '#94a3b8' }}>Select a category...</option>
+                  <option value="technology" style={{ background: '#1e293b', color: '#e2e8f0' }}>Technology</option>
+                  <option value="design" style={{ background: '#1e293b', color: '#e2e8f0' }}>Design</option>
+                  <option value="development" style={{ background: '#1e293b', color: '#e2e8f0' }}>Development</option>
+                  <option value="personal" style={{ background: '#1e293b', color: '#e2e8f0' }}>Personal</option>
+                  <option value="tutorial" style={{ background: '#1e293b', color: '#e2e8f0' }}>Tutorial</option>
+                  <option value="review" style={{ background: '#1e293b', color: '#e2e8f0' }}>Review</option>
+                  <option value="news" style={{ background: '#1e293b', color: '#e2e8f0' }}>News</option>
+                  <option value="opinion" style={{ background: '#1e293b', color: '#e2e8f0' }}>Opinion</option>
+                  <option value="lifestyle" style={{ background: '#1e293b', color: '#e2e8f0' }}>Lifestyle</option>
+                  <option value="travel" style={{ background: '#1e293b', color: '#e2e8f0' }}>Travel</option>
+                  <option value="other" style={{ background: '#1e293b', color: '#e2e8f0' }}>Other</option>
+                </select>
               </div>
 
               <div>

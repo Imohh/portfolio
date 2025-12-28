@@ -20,6 +20,7 @@ const BlogPost = () => {
   const [email, setEmail] = useState("");
   const [website, setWebsite] = useState("");
   const [newComment, setNewComment] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -27,6 +28,46 @@ const BlogPost = () => {
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Prevent right-click context menu
+  useEffect(() => {
+    const preventContextMenu = (e) => {
+      e.preventDefault();
+      return false;
+    };
+
+    // Prevent dragging images
+    const preventDragStart = (e) => {
+      if (e.target.tagName === 'IMG') {
+        e.preventDefault();
+        return false;
+      }
+    };
+
+    // Prevent keyboard shortcuts for saving/copying
+    const preventKeyboardShortcuts = (e) => {
+      // Prevent Ctrl+S (Save), Ctrl+C (Copy), Ctrl+A (Select All), Ctrl+P (Print)
+      if ((e.ctrlKey || e.metaKey) && ['s', 'c', 'a', 'p', 'u'].includes(e.key.toLowerCase())) {
+        e.preventDefault();
+        return false;
+      }
+      // Prevent F12 (DevTools)
+      if (e.keyCode === 123) {
+        e.preventDefault();
+        return false;
+      }
+    };
+
+    document.addEventListener('contextmenu', preventContextMenu);
+    document.addEventListener('dragstart', preventDragStart);
+    document.addEventListener('keydown', preventKeyboardShortcuts);
+
+    return () => {
+      document.removeEventListener('contextmenu', preventContextMenu);
+      document.removeEventListener('dragstart', preventDragStart);
+      document.removeEventListener('keydown', preventKeyboardShortcuts);
+    };
   }, []);
 
   const isMobile = windowWidth < 768;
@@ -48,6 +89,7 @@ const BlogPost = () => {
       return;
     }
 
+    setIsSubmitting(true);
     try {
       await addComment({ name, email, website, text: newComment });
       setName("");
@@ -56,10 +98,11 @@ const BlogPost = () => {
       setNewComment("");
     } catch (err) {
       alert(err.message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
   if (!post) return <div>Post not found</div>;
 
@@ -78,8 +121,20 @@ const BlogPost = () => {
           minHeight: "100vh",
           padding: isMobile ? "4rem 1rem" : "8rem 1.25rem",
           position: "relative",
+          userSelect: "none",
+          WebkitUserSelect: "none",
+          MozUserSelect: "none",
+          msUserSelect: "none",
         }}
       >
+        <style>
+          {`
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+          `}
+        </style>
         <div
           style={{
             maxWidth: isMobile ? "100%" : "900px",
@@ -135,6 +190,8 @@ const BlogPost = () => {
                 style={{
                   position: "absolute",
                   right: 0,
+                  bottom: isMobile ? "100%" : "auto",
+                  top: isMobile ? "auto" : "100%",
                   marginTop: isMobile ? "0" : "0.75rem",
                   marginBottom: isMobile ? "0.75rem" : "0",
                   width: isMobile ? "200px" : "220px",
@@ -229,11 +286,16 @@ const BlogPost = () => {
               <img
                 src={post.coverImage}
                 alt={post.name}
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
                 style={{
                   width: "100%",
                   height: "100%",
                   objectFit: "cover",
                   transition: "transform 0.3s ease",
+                  pointerEvents: "none",
+                  userSelect: "none",
+                  WebkitUserDrag: "none",
                 }}
                 onMouseEnter={(e) => {
                   if (!isMobile) e.currentTarget.style.transform = "scale(1.05)";
@@ -331,10 +393,15 @@ const BlogPost = () => {
                       <img
                         src={block.src}
                         alt=""
+                        draggable="false"
+                        onContextMenu={(e) => e.preventDefault()}
                         style={{
                           width: "100%",
                           display: "block",
                           transition: "transform 0.3s ease",
+                          pointerEvents: "none",
+                          userSelect: "none",
+                          WebkitUserDrag: "none",
                         }}
                         onMouseEnter={(e) => {
                           if (!isMobile)
@@ -455,7 +522,13 @@ const BlogPost = () => {
             )}
 
             {/* COMMENT FORM */}
-            <form onSubmit={handleCommentSubmit}>
+            <form 
+              onSubmit={handleCommentSubmit}
+              style={{
+                userSelect: "text",
+                WebkitUserSelect: "text",
+              }}
+            >
               <h3
                 style={{
                   fontSize: isMobile ? "1.25rem" : "1.5rem",
@@ -581,6 +654,7 @@ const BlogPost = () => {
 
               <button
                 type="submit"
+                disabled={isSubmitting}
                 style={{
                   background: "linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)",
                   color: "#ffffff",
@@ -589,13 +663,18 @@ const BlogPost = () => {
                   border: "none",
                   fontWeight: "600",
                   fontSize: isMobile ? "0.95rem" : "1rem",
-                  cursor: "pointer",
+                  cursor: isSubmitting ? "not-allowed" : "pointer",
                   boxShadow: "0 4px 15px rgba(139, 92, 246, 0.4)",
                   transition: "all 0.3s ease",
                   letterSpacing: "0.05em",
+                  opacity: isSubmitting ? 0.7 : 1,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "0.5rem",
                 }}
                 onMouseEnter={(e) => {
-                  if (!isMobile) {
+                  if (!isMobile && !isSubmitting) {
                     e.currentTarget.style.transform = "translateY(-2px)";
                     e.currentTarget.style.boxShadow =
                       "0 6px 20px rgba(139, 92, 246, 0.6)";
@@ -609,7 +688,19 @@ const BlogPost = () => {
                   }
                 }}
               >
-                Post Comment
+                {isSubmitting && (
+                  <div
+                    style={{
+                      width: "1rem",
+                      height: "1rem",
+                      border: "2px solid #ffffff",
+                      borderTop: "2px solid transparent",
+                      borderRadius: "50%",
+                      animation: "spin 0.8s linear infinite",
+                    }}
+                  />
+                )}
+                {isSubmitting ? "Posting..." : "Post Comment"}
               </button>
             </form>
           </div>
