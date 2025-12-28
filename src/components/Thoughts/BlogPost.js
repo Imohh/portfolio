@@ -9,6 +9,73 @@ import {
   FaEnvelope,
 } from "react-icons/fa";
 import { useBlogPost } from "../../hooks/useBlogPost"; // Adjust import path
+import { toast, useToast } from "../ui/toast"; // Adjust import path to your toast file
+
+function Toaster() {
+  const { toasts } = useToast();
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const isMobile = windowWidth < 768;
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        top: isMobile ? "1rem" : "2rem",
+        right: isMobile ? "1rem" : "2rem",
+        display: "flex",
+        flexDirection: "column",
+        gap: "1rem",
+        zIndex: 9999,
+      }}
+    >
+      {toasts.map((t) => (
+        <div
+          key={t.id}
+          style={{
+            padding: isMobile ? "1rem" : "1.25rem",
+            background: "rgba(30, 30, 30, 0.98)",
+            backdropFilter: "blur(10px)",
+            borderRadius: "12px",
+            border: "1px solid rgba(139, 92, 246, 0.3)",
+            color: "#ffffff",
+            minWidth: isMobile ? "250px" : "300px",
+            boxShadow: "0 4px 20px rgba(0, 0, 0, 0.5)",
+            transition: "opacity 0.3s ease, transform 0.3s ease",
+            opacity: t.open ? 1 : 0,
+            transform: t.open ? "translateX(0)" : "translateX(20px)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <span style={{ fontSize: isMobile ? "0.95rem" : "1rem" }}>
+            {t.content}
+          </span>
+          <span
+            style={{
+              cursor: "pointer",
+              fontSize: "1.25rem",
+              opacity: 0.7,
+              transition: "opacity 0.2s ease",
+            }}
+            onClick={() => t.dismiss()}
+            onMouseEnter={(e) => (e.currentTarget.style.opacity = 1)}
+            onMouseLeave={(e) => (e.currentTarget.style.opacity = 0.7)}
+          >
+            ×
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 const BlogPost = () => {
   const { slug } = useParams();
@@ -96,6 +163,7 @@ const BlogPost = () => {
       setEmail("");
       setWebsite("");
       setNewComment("");
+      toast({ content: "Comment posted successfully!" });
     } catch (err) {
       alert(err.message);
     } finally {
@@ -275,7 +343,6 @@ const BlogPost = () => {
             <div
               style={{
                 width: "100%",
-                height: isMobile ? "300px" : "500px",
                 borderRadius: "16px",
                 overflow: "hidden",
                 marginBottom: isMobile ? "2rem" : "3rem",
@@ -290,12 +357,13 @@ const BlogPost = () => {
                 onContextMenu={(e) => e.preventDefault()}
                 style={{
                   width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
+                  height: "auto",
+                  objectFit: "contain",
                   transition: "transform 0.3s ease",
                   pointerEvents: "none",
                   userSelect: "none",
                   WebkitUserDrag: "none",
+                  display: "block",
                 }}
                 onMouseEnter={(e) => {
                   if (!isMobile) e.currentTarget.style.transform = "scale(1.05)";
@@ -310,7 +378,7 @@ const BlogPost = () => {
                   bottom: 0,
                   left: 0,
                   right: 0,
-                  height: "150px",
+                  height: isMobile ? "100px" : "150px",
                   background:
                     "linear-gradient(to top, rgba(26, 26, 26, 0.9) 0%, transparent 100%)",
                 }}
@@ -706,6 +774,7 @@ const BlogPost = () => {
           </div>
         </div>
       </section>
+      <Toaster />
     </>
   );
 };
