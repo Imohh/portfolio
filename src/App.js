@@ -24,9 +24,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import BlogList from "./components/Thoughts/BlogList.js";
 import AdminLogin from "./components/admin/Login.jsx";
 import AdminRoute from "./components/admin/AdminRoute";
-import AnalyticsTracker from "./components/AnalyticsTracker";
-
-ReactGA.initialize(process.env.REACT_APP_GA_TRACKING_ID);
 
 
 function AppContent() {
@@ -46,7 +43,6 @@ function AppContent() {
   return (
     <>
       <Preloader load={load} />
-      <AnalyticsTracker />
       <div className="App" id={load ? "no-scroll" : "scroll"}>
         {/* Only show Navbar if NOT on admin route */}
         {!isAdminRoute && <Navbar />}
