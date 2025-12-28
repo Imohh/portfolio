@@ -133,7 +133,12 @@ export default function CreatePost() {
             <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} style={inputStyle} />
             <input type="text" placeholder="Slug" value={slug} onChange={(e) => setSlug(e.target.value)} style={inputStyle} />
             <input type="text" placeholder="Category" value={author} onChange={(e) => setAuthor(e.target.value)} style={inputStyle} />
-            <input type="text" placeholder="Date" value={date} onChange={(e) => setDate(e.target.value)} style={inputStyle} />
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              style={inputStyle}
+            />
 
             <div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
               <button type="button" onClick={() => addBlock('text')} style={{ ...buttonStyle, backgroundColor: '#374151' }}>Add Text Block</button>
