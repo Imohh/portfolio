@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import ReactGA from "react-ga4";
 import { useLocation } from "react-router-dom";
 import Preloader from "../src/components/Pre";
 import Navbar from "./components/Navbar";
@@ -23,6 +24,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import BlogList from "./components/Thoughts/BlogList.js";
 import AdminLogin from "./components/admin/Login.jsx";
 import AdminRoute from "./components/admin/AdminRoute";
+import AnalyticsTracker from "./components/AnalyticsTracker";
+
+ReactGA.initialize(process.env.REACT_APP_GA_TRACKING_ID);
+
 
 function AppContent() {
   const [load, upadateLoad] = useState(true);
@@ -41,6 +46,7 @@ function AppContent() {
   return (
     <>
       <Preloader load={load} />
+      <AnalyticsTracker />
       <div className="App" id={load ? "no-scroll" : "scroll"}>
         {/* Only show Navbar if NOT on admin route */}
         {!isAdminRoute && <Navbar />}
