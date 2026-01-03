@@ -8,8 +8,9 @@ import {
   FaWhatsapp,
   FaEnvelope,
 } from "react-icons/fa";
-import { useBlogPost } from "../../hooks/useBlogPost"; // Adjust import path
-import { toast, useToast } from "../ui/toast"; // Adjust import path to your toast file
+import { useBlogPost } from "../../hooks/useBlogPost";
+import { toast, useToast } from "../ui/toast";
+import BlogPostSkeleton from "../Loader/BlogPostSkeleton";
 
 function Toaster() {
   const { toasts } = useToast();
@@ -125,6 +126,10 @@ const BlogPost = () => {
         return false;
       }
     };
+
+    if (loading) {
+      return <BlogPostSkeleton />;
+    }
 
     document.addEventListener('contextmenu', preventContextMenu);
     document.addEventListener('dragstart', preventDragStart);

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { Link } from 'react-router-dom'
 import { Helmet } from "react-helmet";
+import BlogListSkeleton from "../Loader/BlogListSkeleton";
 
 const BlogList = () => {
   const [products, setProducts] = useState([]);
@@ -19,7 +20,7 @@ const BlogList = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch('https://portfolio-backend-wheat-three.vercel.app/post');
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/post`);
       console.log('Response status:', response.status)
       if (response.ok) {
         const data = await response.json();
@@ -42,21 +43,7 @@ const BlogList = () => {
   }, []);
 
   if (loading) {
-    return (
-      <div style={{
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)",
-        color: "#ffffff",
-        fontSize: isMobile ? "1rem" : "1.125rem",
-        fontWeight: "300",
-        letterSpacing: "0.05em"
-      }}>
-        Loading blog posts...
-      </div>
-    );
+    return <BlogListSkeleton />;
   }
 
   if (error) {
