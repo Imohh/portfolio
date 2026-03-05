@@ -1,5 +1,3 @@
-import React from "react";
-import { Container, Row, Col } from "react-bootstrap";
 import {
   AiFillGithub,
   AiOutlineTwitter,
@@ -8,63 +6,38 @@ import {
 import { FaLinkedinIn } from "react-icons/fa";
 
 function Footer() {
-  let date = new Date();
-  let year = date.getFullYear();
+  let year = new Date().getFullYear();
+
   return (
-    <Container fluid className="footer">
-      <Row>
-        <Col md="4" className="footer-copywright">
-          <h3>Designed and Developed by Imoh Precious</h3>
-        </Col>
-        <Col md="4" className="footer-copywright">
-          <h3>Copyright © {year} Imoh Precious</h3>
-        </Col>
-        <Col md="4" className="footer-body">
-          <ul className="footer-icons">
-            <li className="social-icons">
-              <a
-                href="https://github.com/imohh"
-                style={{ color: "white" }}
-                target="_blank" 
-                rel="noopener noreferrer"
-              >
-                <AiFillGithub />
-              </a>
-            </li>
-            <li className="social-icons">
-              <a
-                href="https://twitter.com/imoh_xo"
-                style={{ color: "white" }}
-                target="_blank" 
-                rel="noopener noreferrer"
-              >
-                <AiOutlineTwitter />
-              </a>
-            </li>
-            <li className="social-icons">
-              <a
-                href="https://www.linkedin.com/in/precious-imoh/"
-                style={{ color: "white" }}
-                target="_blank" 
-                rel="noopener noreferrer"
-              >
-                <FaLinkedinIn />
-              </a>
-            </li>
-            <li className="social-icons">
-              <a
-                href="https://www.instagram.com/imoh_xo"
-                style={{ color: "white" }}
-                target="_blank" 
-                rel="noopener noreferrer"
-              >
-                <AiFillInstagram />
-              </a>
-            </li>
-          </ul>
-        </Col>
-      </Row>
-    </Container>
+    <footer className="futuristic-footer">
+      <div className="footer-inner-v2">
+        <p className="footer-copy-v2">
+          &copy; {year} Imoh Precious. All rights reserved.
+        </p>
+        <ul className="footer-socials-v2">
+          <li>
+            <a href="https://github.com/imohh" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+              <AiFillGithub />
+            </a>
+          </li>
+          <li>
+            <a href="https://twitter.com/imoh_xo" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+              <AiOutlineTwitter />
+            </a>
+          </li>
+          <li>
+            <a href="https://www.linkedin.com/in/precious-imoh/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+              <FaLinkedinIn />
+            </a>
+          </li>
+          <li>
+            <a href="https://www.instagram.com/imoh_xo" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              <AiFillInstagram />
+            </a>
+          </li>
+        </ul>
+      </div>
+    </footer>
   );
 }
 

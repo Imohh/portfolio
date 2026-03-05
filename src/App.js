@@ -1,14 +1,10 @@
-import React, { useState, useEffect } from "react";
-import ReactGA from "react-ga4";
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Preloader from "../src/components/Pre";
 import Navbar from "./components/Navbar";
-import Home from "./components/Home/Home";
-import About from "./components/About/About";
-import BlogPost from "./components/Thoughts/BlogPost";
-import Projects from "./components/Projects/Projects";
+import LandingPage from "./components/LandingPage";
 import Footer from "./components/Footer";
-import Resume from "./components/Resume/ResumeNew";
+import BlogPost from "./components/Thoughts/BlogPost";
 import Adminblog from './components/admin/Blog';
 import CreatePost from './components/admin/CreatePost.jsx';
 import {
@@ -29,7 +25,7 @@ import AdminRoute from "./components/admin/AdminRoute";
 function AppContent() {
   const [load, upadateLoad] = useState(true);
   const location = useLocation();
-  
+
   // Check if current route is an admin route
   const isAdminRoute = location.pathname.startsWith('/admin');
 
@@ -46,13 +42,10 @@ function AppContent() {
       <div className="App" id={load ? "no-scroll" : "scroll"}>
         {/* Only show Navbar if NOT on admin route */}
         {!isAdminRoute && <Navbar />}
-        
+
         <ScrollToTop />
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/project" element={<Projects />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/resume" element={<Resume />} />
+          <Route path="/" element={<LandingPage />} />
           <Route path="/thoughts" element={<BlogList />} />
           <Route path="/thoughts/:slug" element={<BlogPost />} />
           <Route path="/admin/login" element={<AdminLogin />} />
@@ -74,7 +67,7 @@ function AppContent() {
           />
           <Route path="*" element={<Navigate to="/"/>} />
         </Routes>
-        
+
         {/* Only show Footer if NOT on admin route */}
         {!isAdminRoute && <Footer />}
       </div>
