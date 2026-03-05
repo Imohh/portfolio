@@ -68,6 +68,7 @@ const reducer = (state, action) => {
         ),
       };
     }
+
     case 'REMOVE_TOAST':
       if (action.toastId === undefined) {
         return {
@@ -75,10 +76,14 @@ const reducer = (state, action) => {
           toasts: [],
         };
       }
+
       return {
         ...state,
         toasts: state.toasts.filter((t) => t.id !== action.toastId),
       };
+
+    default:
+      return state;   // ✅ required for ESLint
   }
 };
 

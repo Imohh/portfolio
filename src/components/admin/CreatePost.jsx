@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Sidebar from './components/Sidebar';
 
-const API_URL = process.env.REACT_APP_API_URL;
+// const API_URL = process.env.REACT_APP_API_URL;
 
 export default function CreatePost() {
   const [name, setName] = useState('');

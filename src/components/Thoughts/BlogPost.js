@@ -10,7 +10,7 @@ import {
 } from "react-icons/fa";
 import { useBlogPost } from "../../hooks/useBlogPost";
 import { toast, useToast } from "../ui/toast";
-import BlogPostSkeleton from "../Loader/BlogPostSkeleton";
+// import BlogPostSkeleton from "../Loader/BlogPostSkeleton";
 
 function Toaster() {
   const { toasts } = useToast();
@@ -99,48 +99,82 @@ const BlogPost = () => {
   }, []);
 
   // Prevent right-click context menu
+  // useEffect(() => {
+  //   const preventContextMenu = (e) => {
+  //     e.preventDefault();
+  //     return false;
+  //   };
+
+  //   // Prevent dragging images
+  //   const preventDragStart = (e) => {
+  //     if (e.target.tagName === 'IMG') {
+  //       e.preventDefault();
+  //       return false;
+  //     }
+  //   };
+
+  //   // Prevent keyboard shortcuts for saving/copying
+  //   const preventKeyboardShortcuts = (e) => {
+  //     // Prevent Ctrl+S (Save), Ctrl+C (Copy), Ctrl+A (Select All), Ctrl+P (Print)
+  //     if ((e.ctrlKey || e.metaKey) && ['s', 'c', 'a', 'p', 'u'].includes(e.key.toLowerCase())) {
+  //       e.preventDefault();
+  //       return false;
+  //     }
+  //     // Prevent F12 (DevTools)
+  //     if (e.keyCode === 123) {
+  //       e.preventDefault();
+  //       return false;
+  //     }
+  //   };
+
+  //   if (loading) {
+  //     return <BlogPostSkeleton />;
+  //   }
+
+  //   document.addEventListener('contextmenu', preventContextMenu);
+  //   document.addEventListener('dragstart', preventDragStart);
+  //   document.addEventListener('keydown', preventKeyboardShortcuts);
+
+  //   return () => {
+  //     document.removeEventListener('contextmenu', preventContextMenu);
+  //     document.removeEventListener('dragstart', preventDragStart);
+  //     document.removeEventListener('keydown', preventKeyboardShortcuts);
+  //   };
+  // }, []);
+
   useEffect(() => {
-    const preventContextMenu = (e) => {
+  if (loading) return;
+
+  const preventContextMenu = (e) => {
+    e.preventDefault();
+  };
+
+  const preventDragStart = (e) => {
+    if (e.target.tagName === "IMG") {
       e.preventDefault();
-      return false;
-    };
+    }
+  };
 
-    // Prevent dragging images
-    const preventDragStart = (e) => {
-      if (e.target.tagName === 'IMG') {
-        e.preventDefault();
-        return false;
-      }
-    };
-
-    // Prevent keyboard shortcuts for saving/copying
-    const preventKeyboardShortcuts = (e) => {
-      // Prevent Ctrl+S (Save), Ctrl+C (Copy), Ctrl+A (Select All), Ctrl+P (Print)
-      if ((e.ctrlKey || e.metaKey) && ['s', 'c', 'a', 'p', 'u'].includes(e.key.toLowerCase())) {
-        e.preventDefault();
-        return false;
-      }
-      // Prevent F12 (DevTools)
-      if (e.keyCode === 123) {
-        e.preventDefault();
-        return false;
-      }
-    };
-
-    if (loading) {
-      return <BlogPostSkeleton />;
+  const preventKeyboardShortcuts = (e) => {
+    if ((e.ctrlKey || e.metaKey) && ["s","c","a","p","u"].includes(e.key.toLowerCase())) {
+      e.preventDefault();
     }
 
-    document.addEventListener('contextmenu', preventContextMenu);
-    document.addEventListener('dragstart', preventDragStart);
-    document.addEventListener('keydown', preventKeyboardShortcuts);
+    if (e.keyCode === 123) {
+      e.preventDefault();
+    }
+  };
 
-    return () => {
-      document.removeEventListener('contextmenu', preventContextMenu);
-      document.removeEventListener('dragstart', preventDragStart);
-      document.removeEventListener('keydown', preventKeyboardShortcuts);
-    };
-  }, []);
+  document.addEventListener("contextmenu", preventContextMenu);
+  document.addEventListener("dragstart", preventDragStart);
+  document.addEventListener("keydown", preventKeyboardShortcuts);
+
+  return () => {
+    document.removeEventListener("contextmenu", preventContextMenu);
+    document.removeEventListener("dragstart", preventDragStart);
+    document.removeEventListener("keydown", preventKeyboardShortcuts);
+  };
+}, [loading]);
 
   const isMobile = windowWidth < 768;
 
@@ -306,7 +340,7 @@ const BlogPost = () => {
                     key={idx}
                     href={social.url}
                     target={social.label !== "Email" ? "_blank" : undefined}
-                    rel={social.label !== "Email" ? "noreferrer" : undefined}
+                    rel="noopener noreferrer"
                     style={{
                       display: "flex",
                       alignItems: "center",

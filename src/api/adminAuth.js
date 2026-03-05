@@ -1,4 +1,4 @@
-const API_URL = process.env.REACT_APP_API_URL;
+// const API_URL = process.env.REACT_APP_API_URL;
 
 export const loginAdmin = async (data) => {
   const res = await fetch(`${process.env.REACT_APP_API_URL}/admin/login`, {
