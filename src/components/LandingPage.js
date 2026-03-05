@@ -211,7 +211,7 @@ function LandingPage() {
                 </span>
               ))}
             </span>
-            <span className="name-line name-accent">
+            <span className="name-line">
               {lastName.split("").map((char, i) => (
                 <span
                   key={i}
