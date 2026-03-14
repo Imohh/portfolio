@@ -488,8 +488,6 @@
 }
 
 .about-hobbies li {
-  display: flex;
-  align-items: flex-start;
   gap: 12px;
   color: var(--text-secondary);
   margin-bottom: 12px;
@@ -681,24 +679,29 @@
   justify-items: center;
 }
 
+/* Replace your existing reveal system for project cards */
 .project-card-v2 {
-  position: relative;
-  background: var(--bg-card);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--border-subtle);
-  border-radius: 18px;
-  overflow: hidden;
-  transition: all 0.5s var(--ease-dramatic);
+  opacity: 0;
+  transform: translateX(-80px) rotate(-3deg) scale(0.92);
+  transition: opacity 0.8s var(--ease-dramatic), transform 0.8s var(--ease-dramatic);
 }
 
-.project-card-v2:hover {
-  border-color: var(--border-glow);
-  transform: translateY(-8px);
-  box-shadow:
-    0 24px 64px rgba(0, 0, 0, 0.4),
-    0 0 0 1px rgba(124, 58, 237, 0.15),
-    0 0 40px rgba(124, 58, 237, 0.08);
+.project-card-v2:nth-child(even) {
+  transform: translateX(80px) rotate(3deg) scale(0.92);
 }
+
+.project-card-v2.revealed {
+  opacity: 1;
+  transform: translateX(0) rotate(0deg) scale(1);
+}
+
+/* Stagger each card */
+.project-card-v2:nth-child(1) { transition-delay: 0s; }
+.project-card-v2:nth-child(2) { transition-delay: 0.12s; }
+.project-card-v2:nth-child(3) { transition-delay: 0.24s; }
+.project-card-v2:nth-child(4) { transition-delay: 0.36s; }
+.project-card-v2:nth-child(5) { transition-delay: 0.48s; }
+.project-card-v2:nth-child(6) { transition-delay: 0.60s; }
 
 .card-image-wrap {
   position: relative;

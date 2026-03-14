@@ -35,11 +35,10 @@ import Particle from "./Particle";
 import myImg from "../Assets/imoh.png";
 
 // Project images
-import chekam from "../Assets/Projects/chekam.png";
+import grep from "../Assets/Projects/grep.png";
 import learnbuddie from "../Assets/Projects/learnbuddie.png";
 import sopeadelaja from "../Assets/Projects/sope.png";
 import recreate from "../Assets/Projects/recreate.png";
-import eminence from "../Assets/Projects/eminence.png";
 import glintz from "../Assets/Projects/glintz.png";
 
 import "./LandingPage.css";
@@ -70,13 +69,9 @@ const tools = [
   { icon: <SiVercel />, label: "Vercel" },
 ];
 
+
+
 const projects = [
-  {
-    img: chekam,
-    title: "Chekam",
-    description: "Property listing website with filters that enables users search for properties with ease.",
-    demoLink: "https://chekam.com",
-  },
   {
     img: learnbuddie,
     title: "Learnbuddie",
@@ -96,17 +91,17 @@ const projects = [
     demoLink: "https://recreateafrica.org",
   },
   {
-    img: eminence,
-    title: "Eminence E-Commerce",
-    description: "E-Commerce website for a luxury fashion brand based in the UK. Built with MERN Stack + Stripe.",
-    ghLink: "https://github.com/imohh/ecommerce-server",
-    demoLink: "https://eminencebygtx.com",
+    img: grep,
+    title: "Grep Delivery",
+    description:"Delivery app where users can track their orders and also see details of the delivery person assigned to them. Built with React, Tailwindcss, Expressjs, Nodejs and MongoDB",
+    // ghLink: "https://github.com/imohh/ecommerce-server",
+    demoLink: "https://grep-website.vercel.app",
   },
   {
     img: glintz,
     title: "Glintz Photography",
     description: "A photography website built with MERN Stack with a fully functional Admin Panel.",
-    ghLink: "https://github.com/imohh/glintz-route",
+    // ghLink: "https://github.com/imohh/glintz-route",
     demoLink: "https://glintzphotography.org",
   },
 ];
@@ -176,6 +171,26 @@ function LandingPage() {
 
     return () => observer.disconnect();
   }, []);
+
+  useEffect(() => {
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("revealed");
+        }
+      });
+    },
+    { threshold: 0.15, rootMargin: "0px 0px -60px 0px" }
+  );
+
+  // existing reveal elements
+  document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+  // project cards get their own reveal
+  document.querySelectorAll(".project-card-v2").forEach((el) => observer.observe(el));
+
+  return () => observer.disconnect();
+}, []);
 
   const firstName = "IMOH";
   const lastName = "PRECIOUS";
@@ -382,7 +397,7 @@ function LandingPage() {
             Some of the things I've built recently.
           </p>
 
-          <div className="projects-grid-v2 reveal reveal-delay-1">
+          <div className="projects-grid-v2">
             {projects.map((project, i) => (
               <div className="project-card-v2" key={i}>
                 <div className="card-image-wrap">

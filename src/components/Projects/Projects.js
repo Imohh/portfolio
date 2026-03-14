@@ -26,7 +26,7 @@ function Projects() {
           Here are a few projects I've worked on recently.
         </p>
         <Row style={{ justifyContent: "center", paddingBottom: "10px" }}>
-          <Col md={4} className="project-card">
+          {/* <Col md={4} className="project-card">
             <ProjectCard
               imgPath={chekam}
               isBlog={false}
@@ -34,7 +34,7 @@ function Projects() {
               description="Property listing website with filters that enables users search for properies with ease, built with React, Material-UI, Bootstrap and Firebase."
               demoLink="https://chekam.com"
             />
-          </Col>
+          </Col> */}
 
           {/*<Col md={4} className="project-card">
             <ProjectCard
@@ -77,7 +77,7 @@ function Projects() {
             />
           </Col>
 
-          <Col md={4} className="project-card">
+          {/* <Col md={4} className="project-card">
             <ProjectCard
               imgPath={eminence}
               isBlog={false}
@@ -86,7 +86,7 @@ function Projects() {
               ghLink="https://github.com/imohh/ecommerce-server"
               demoLink="https://eminencebygtx.com"
             />
-          </Col>
+          </Col> */}
 
           <Col md={4} className="project-card">
             <ProjectCard
