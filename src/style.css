@@ -1,200 +1,120 @@
-html {
-  --section-background-color: linear-gradient(
-    to bottom left,
-    rgba(10, 10, 26, 0.9),
-    rgba(5, 5, 16, 0.95)
-  );
+/* ─────────────────────────────────────────────────────────
+   Global overrides — shared across all pages
+   (Blog / Thoughts, admin routes, etc.)
+───────────────────────────────────────────────────────── */
 
-  --image-gradient: linear-gradient(
-    to bottom left,
-    rgba(10, 10, 26, 0.8),
-    rgba(5, 5, 16, 0.9)
-  );
-
-  --imp-text-color: #c084fc;
-}
-
-.purple {
-  color: var(--imp-text-color) !important;
-}
-
-button:focus {
-  box-shadow: none !important;
-}
-
-/* --------- */
-/*  Preloader */
-/* --------- */
-#preloader {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 999999;
-  background-color: #050510;
-  background-image: url(./Assets/pre.svg);
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
+/* Preloader states */
 #preloader-none {
   opacity: 0;
+  pointer-events: none;
 }
-
 #no-scroll {
   overflow: hidden;
   height: 100vh;
 }
 
-/* --------- */
-/* Scrollbar  */
-/* --------- */
-
-::-webkit-scrollbar {
-  width: 6px;
+/* ── Blog / Thoughts pages ───────────────────────────── */
+.project-section,
+.about-section {
+  position: relative;
+  padding-top: 130px;
+  padding-bottom: 60px;
+  background: linear-gradient(to bottom left, rgba(6, 6, 17, 0.96), rgba(3, 3, 10, 0.98));
+  color: #f4f2ff;
 }
 
-::-webkit-scrollbar-track {
-  background: #050510;
+.project-heading {
+  font-family: "Syne", sans-serif;
+  color: #f4f2ff;
+  font-size: 2.1em;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  padding-top: 10px;
 }
 
-::-webkit-scrollbar-thumb {
-  background: rgba(124, 58, 237, 0.5);
-  border-radius: 12px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(124, 58, 237, 0.8);
-  border-radius: 12px;
-}
-
-/* --------- */
-/* Particles  */
-/* --------- */
-#tsparticles {
-  position: fixed !important;
-  background-repeat: no-repeat !important;
-  background-size: cover !important;
-  width: 100%;
-  height: 100%;
-}
-
-/* --------- */
-/* Blog styles (kept for /thoughts pages) */
-/* --------- */
+/* Blog cards */
 .blog-card {
-  padding-top: 50px !important;
-  padding-bottom: 50px !important;
-  padding-left: 25px !important;
-  padding-right: 25px !important;
-  height: auto !important;
+  padding: 40px 20px;
+  height: auto;
 }
-
 .blog-card-view {
-  background-color: transparent !important;
-  box-shadow: 0 3px 3px 2px rgba(124, 58, 237, 0.3) !important;
-  color: white !important;
-  transition: all 0.5s ease 0s !important;
+  background-color: rgba(12, 12, 30, 0.65) !important;
+  box-shadow: 0 2px 16px rgba(139, 92, 246, 0.15) !important;
+  color: #f4f2ff !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-radius: 12px !important;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
   height: 100% !important;
 }
-
+.blog-card-view:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 16px 48px rgba(139, 92, 246, 0.25) !important;
+  border-color: rgba(190, 255, 85, 0.2) !important;
+}
 .blog-link {
-  color: white !important;
+  color: #f4f2ff !important;
   text-decoration: none !important;
 }
-
-.blog-link:hover {
-  cursor: pointer !important;
-}
-
-.blog-card-view:hover {
-  transform: scale(1.02) !important;
-  overflow: hidden !important;
-  box-shadow: 0 3px 3px 5px rgba(124, 58, 237, 0.45) !important;
-}
-
-.blog-img {
-  padding: 0px !important;
-  opacity: 0.8 !important;
-  border-radius: 0px !important;
-}
-
+.blog-img,
 .card-img-top {
-  padding: 20px !important;
-  opacity: 0.8 !important;
-  border-radius: 10px !important;
+  opacity: 0.85 !important;
+  border-radius: 8px !important;
+  padding: 12px !important;
 }
 
+/* Buttons (Bootstrap override) */
 .btn-primary {
+  background-color: #8B5CF6 !important;
+  border-color: #8B5CF6 !important;
   color: #fff !important;
+  border-radius: 4px !important;
+  font-family: "Inter", sans-serif !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.04em !important;
+  transition: all 0.25s !important;
+}
+.btn-primary:hover {
   background-color: #7c3aed !important;
   border-color: #7c3aed !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.35) !important;
 }
-
-.btn-primary:hover {
-  color: #fff !important;
-  background-color: #6d28d9 !important;
-  border-color: #6d28d9 !important;
-}
-
 .btn:focus {
   outline: none !important;
   box-shadow: none !important;
 }
 
-.project-heading {
-  color: white !important;
-  font-size: 2.3em !important;
-  font-weight: 500 !important;
-  padding-top: 10px !important;
-}
-
-/* Blog page section background */
-.project-section {
-  position: relative !important;
-  padding-top: 150px !important;
-  padding-bottom: 30px !important;
-  background-image: var(--section-background-color) !important;
-}
-
-.about-section {
-  position: relative !important;
-  padding-top: 150px !important;
-  padding-bottom: 30px !important;
-  background-image: var(--section-background-color) !important;
-  color: white !important;
-}
-
-/* Like button (blog comments) */
-.like-item {
-  padding-top: 10px !important;
-  font-size: 1.1em !important;
-  font-family: sans-serif !important;
-}
-
+/* Like button */
+.like-item { padding-top: 10px; font-size: 1.05em; }
 .like-btn {
-  background-color: rgba(124, 58, 237, 0.35) !important;
-  border-color: rgba(124, 58, 237, 0.35) !important;
-  padding: 0.25rem 0.98rem !important;
-  border-radius: 5px !important;
-  line-height: 1.4 !important;
-  transition: 0.3s ease !important;
+  background-color: rgba(139, 92, 246, 0.2) !important;
+  border-color: rgba(139, 92, 246, 0.3) !important;
+  color: #f4f2ff !important;
+  padding: 0.2rem 0.9rem !important;
+  border-radius: 4px !important;
+  transition: all 0.25s !important;
 }
-
 .like-btn:hover {
-  transform: translateY(-2px) !important;
-  background-color: rgba(124, 58, 237, 0.5) !important;
-  border-color: rgba(124, 58, 237, 0.5) !important;
+  background-color: rgba(139, 92, 246, 0.4) !important;
+  border-color: rgba(139, 92, 246, 0.5) !important;
+  transform: translateY(-1px) !important;
 }
 
-.blockquote-footer {
-  color: #a588c0 !important;
-}
+.blockquote-footer { color: #8886a4 !important; }
 
-/* Social icons (used by blog pages) */
+/* Social icons (used in blog comments etc.) */
 .social-icons {
-  display: inline-block !important;
-  padding-right: 15px;
-  padding-left: 15px;
+  display: inline-block;
+  padding: 0 14px;
+}
+
+/* Scrollbar (global fallback) */
+::-webkit-scrollbar       { width: 4px; }
+::-webkit-scrollbar-track { background: #03030a; }
+::-webkit-scrollbar-thumb {
+  background: rgba(190, 255, 85, 0.35);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(190, 255, 85, 0.6);
 }

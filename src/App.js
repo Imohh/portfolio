@@ -51,7 +51,7 @@ function AppContent() {
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route
             path="/admin/blog"
-            element={
+            element={ 
               <AdminRoute>
                 <Adminblog />
               </AdminRoute>

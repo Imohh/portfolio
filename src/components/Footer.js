@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import {
   AiFillGithub,
   AiOutlineTwitter,
@@ -6,35 +7,37 @@ import {
 import { FaLinkedinIn } from "react-icons/fa";
 
 function Footer() {
-  let year = new Date().getFullYear();
+  const year = new Date().getFullYear();
 
   return (
-    <footer className="futuristic-footer">
-      <div className="footer-inner-v2">
-        <p className="footer-copy-v2">
-          &copy; {year} Imoh Precious. All rights reserved.
+    <footer className="pf-footer">
+      <div className="pf-footer__inner">
+        <p className="pf-footer__copy">
+          &copy; {year}{" "}
+          <span style={{ color: "var(--text-200)" }}>Imoh Precious</span>
+          {" "}— Built with purpose.
         </p>
-        <ul className="footer-socials-v2">
-          <li>
-            <a href="https://github.com/imohh" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-              <AiFillGithub />
-            </a>
-          </li>
-          <li>
-            <a href="https://twitter.com/imoh_xo" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-              <AiOutlineTwitter />
-            </a>
-          </li>
-          <li>
-            <a href="https://www.linkedin.com/in/precious-imoh/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-              <FaLinkedinIn />
-            </a>
-          </li>
-          <li>
-            <a href="https://www.instagram.com/imoh_xo" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-              <AiFillInstagram />
-            </a>
-          </li>
+
+        <ul className="pf-footer__socials">
+          {[
+            { href: "https://github.com/imohh",                   icon: <AiFillGithub />,    label: "GitHub"    },
+            { href: "https://twitter.com/imoh_xo",                icon: <AiOutlineTwitter />, label: "Twitter"   },
+            { href: "https://www.linkedin.com/in/precious-imoh/", icon: <FaLinkedinIn />,    label: "LinkedIn"  },
+            { href: "https://www.instagram.com/imoh_xo",          icon: <AiFillInstagram />, label: "Instagram" },
+          ].map(({ href, icon, label }, i) => (
+            <li key={i}>
+              <motion.a
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={label}
+                whileHover={{ y: -3 }}
+                transition={{ type: "spring", stiffness: 400, damping: 20 }}
+              >
+                {icon}
+              </motion.a>
+            </li>
+          ))}
         </ul>
       </div>
     </footer>
