@@ -110,7 +110,7 @@ const projects = [
   },
   {
     img: ycc,
-    title: "Yacht Crew Connect",
+    title: "Yacht Crew Center",
     tag: "Maritime Platform",
     description: "A dedicated platform for yacht crew members — crew profiles, vessel listings, job postings, and everything pertaining to life at sea.",
     demoLink: "https://yachtcrewcenter.com",
