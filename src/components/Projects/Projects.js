@@ -2,7 +2,6 @@ import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import ProjectCard from "./ProjectCards";
 import Particle from "../Particle";
-import grep from "../../Assets/Projects/grep.png";
 import lends from "../../Assets/Projects/lends.png";
 import glintz from "../../Assets/Projects/glintz.png";
 import chekam from "../../Assets/Projects/chekam.png";
@@ -108,17 +107,6 @@ function Projects() {
               description="My tech startup where we make our client's visions come to life"
               ghLink="https://github.com/Imohh/nextjs-portfolio"
               demoLink="https://oprimetech.com.ng"
-            />
-          </Col>
-
-          <Col md={4} className="project-card">
-            <ProjectCard
-              imgPath={grep}
-              isBlog={false}
-              title="Grep"
-              description="Delivery app where users can track their orders and also see details of the delivery person assigned to them. Built with React, Tailwindcss, Expressjs, Nodejs and MongoDB"
-              ghLink="https://github.com/imohh/grep-website"
-              demoLink="https://grep-website.vercel.app/"
             />
           </Col>
 

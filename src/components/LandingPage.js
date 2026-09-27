@@ -33,7 +33,7 @@ import "swiper/css/navigation";
 import Type from "./Home/Type";
 import myImg from "../Assets/imoh.png";
 
-import grep from "../Assets/Projects/grep.png";
+import parensure from "../Assets/Projects/parensure.jpg";
 import learnbuddie from "../Assets/Projects/learnbuddie.png";
 import sopeadelaja from "../Assets/Projects/sope.png";
 import recreate from "../Assets/Projects/recreate.png";
@@ -73,6 +73,13 @@ const tools = [
 ];
 
 const projects = [
+  {
+    img: parensure,
+    title: "Parensure",
+    tag: "Caregiving Platform",
+    description: "A mobile care coordination app connecting care receivers with verified caregivers and caregiving firms — real-time chat, health tracking, and medication reminders. React Native + Node.js.",
+    demoLink: "https://play.google.com/store/apps/details?id=com.parensure&hl=en",
+  },
   {
     img: joel,
     title: "Joel Adu",
@@ -115,16 +122,14 @@ const projects = [
     description: "A dedicated platform for yacht crew members — crew profiles, vessel listings, job postings, and everything pertaining to life at sea.",
     demoLink: "https://yachtcrewcenter.com",
   },
-  {
-    img: grep,
-    title: "Grep Delivery",
-    tag: "Delivery App",
-    description: "Real-time order tracking app — users see their order status and assigned delivery person live. MERN stack + Tailwind.",
-    demoLink: "https://grep-website.vercel.app",
-  },
 ];
 
 const testimonials = [
+  {
+    quote: "Your ability to translate my ideas into code is what is making Parensure a reality! I greatly appreciate your work and support!",
+    name: "Julio",
+    role: "CEO, Parensure",
+  },
   {
     quote: "Imoh is a highly skilled developer especially in ReactJs. He has incredible leadership skills, as well as an exemplary work ethic and friendly temperament, making him the model professional and wonderful human being.",
     name: "Charles Hul",

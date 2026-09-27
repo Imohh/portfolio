@@ -506,7 +506,7 @@
 
 .pf-hero__content {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 60px;
   align-items: center;
   padding-top: 60px;
@@ -537,6 +537,13 @@
   animation: cursorPing 2s ease-in-out infinite;
 }
 
+/* Left column — sized by its grid track (see minmax(0,1fr) above), never by
+   its own content, so it can safely act as a size container for the name */
+.pf-hero__left {
+  min-width: 0;
+  container-type: inline-size;
+}
+
 /* Hero name */
 .pf-hero__name {
   margin-bottom: 20px;
@@ -548,7 +555,11 @@
 .pf-hero__name-char {
   display: inline-block;
   font-family: "Syne", sans-serif;
-  font-size: clamp(64px, 9vw, 120px);
+  /* Sized relative to the column's own width (cqw), not the viewport (vw) —
+     "PRECIOUS" (8 letters, nowrap) needs ~8.7x its font-size in width, so
+     10cqw keeps it inside the column at any breakpoint instead of forcing
+     the grid track wider than the viewport and pushing the photo off-screen */
+  font-size: clamp(32px, 10cqw, 96px);
   font-weight: 900;
   letter-spacing: -0.03em;
   color: var(--text-100);
@@ -631,6 +642,7 @@
 .pf-hero__right {
   display: flex;
   justify-content: center;
+  min-width: 0;
 }
 .pf-hero__avatar-wrap {
   position: relative;
@@ -1453,10 +1465,6 @@
   .pf-nav__links { display: none; }
   .pf-nav__hamburger { display: flex; }
 
-  .pf-hero__name-char {
-    font-size: clamp(50px, 13vw, 80px);
-  }
-
   .pf-hero__cta {
     justify-content: center;
   }
@@ -1494,9 +1502,6 @@
 }
 
 @media (max-width: 480px) {
-  .pf-hero__name-char {
-    font-size: clamp(40px, 14vw, 60px);
-  }
   .pf-chip { display: none; }
   .pf-work-item__tag { display: none; } /* title-only on smallest screens */
   .pf-about__stats { grid-template-columns: 1fr; }
