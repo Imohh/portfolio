@@ -4,13 +4,13 @@ import Split, { parseWords } from "../components/fx/Split";
 import { Label } from "./Bits";
 
 const STATEMENT =
-  "I'm *Imoh Precious*, a frontend engineer in Lagos who treats the browser as a canvas. An economics degree taught me to think in systems; years of shipping taught me that the details are the product. I build interfaces that feel *effortless* and look unforgettable, and I'm currently doing it at *Chekam.*";
+  "I'm *Imoh Precious*, a frontend engineer in Lagos who treats the browser as a canvas. The blend between economics and tech has taught me to think in systems; years of shipping taught me that the details are the product. I build interfaces that feel *effortless* and look unforgettable, I love creating experiences, and I'm currently doing it at *Punch.*";
 
 const CAPABILITIES = [
   ["Interface engineering", "React · Next.js · TypeScript"],
-  ["Motion & WebGL", "GSAP · GLSL shaders · scroll choreography"],
+  // ["Motion & WebGL", "GSAP · GLSL shaders · scroll choreography"],
   ["Full-stack products", "Node · Express · MongoDB · PostgreSQL"],
-  ["Mobile", "React Native · Expo"],
+  ["Mobile Applications", "React Native · Expo"],
 ];
 
 const STATS = [

@@ -64,7 +64,7 @@ export default function Hero({ ready }) {
 
       <div className="pf-hero__foot">
         <p className="pf-hero__blurb pf-mask"><span className="pf-hero__in">
-          I design and build digital products that move &mdash; precise, fast, and a little unreasonable about the details.
+          I design and build digital products that speak in my absence &mdash; precise, fast, and very obsessed about the details.
         </span></p>
 
         <div className="pf-hero__cta pf-mask"><span className="pf-hero__in">

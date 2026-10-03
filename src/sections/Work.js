@@ -1,4 +1,4 @@
-import { useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { BsArrowUpRight } from "react-icons/bs";
 import { gsap, isFinePointer } from "../lib/smooth";
 import Split from "../components/fx/Split";
@@ -12,6 +12,23 @@ export default function Work() {
   const [active, setActive] = useState(null);
   const fine = useMemo(() => isFinePointer(), []);
   const images = useMemo(() => projects.map((p) => p.img), []);
+
+  // WorkGL's preview canvas is fixed to the viewport and only clears on an
+  // explicit mouseleave/blur. Scrolling without also moving the mouse (wheel,
+  // trackpad) never fires those — the row visually slides out from under a
+  // stationary cursor, but "active" never resets, so the floating preview
+  // keeps following the cursor into whatever section ends up underneath it.
+  // Any scroll means "moving on", so just drop it there too. A native window
+  // listener rather than Lenis's own "scroll" event: Lenis drives the real
+  // scroll position (confirmed — it's not a transform-only wrapper), so this
+  // fires regardless, and it sidesteps a real race besides — this effect runs
+  // before App's does (child effects commit before the parent's), so getting
+  // the Lenis instance here is not guaranteed to be ready yet on first mount.
+  useEffect(() => {
+    const clear = () => setActive(null);
+    window.addEventListener("scroll", clear, { passive: true });
+    return () => window.removeEventListener("scroll", clear);
+  }, []);
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {

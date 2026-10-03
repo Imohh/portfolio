@@ -102,8 +102,8 @@ export default function Footer() {
         </div>
 
         <div className="pf-foot__base pf-foot__fade">
-          <span>&copy; {new Date().getFullYear()} Imoh Precious</span>
-          <span>Built by hand &mdash; React, WebGL, GSAP</span>
+          <span>&copy; 2021 Imoh Precious</span>
+          <span>Built with precision - Imoh</span>
           <button onClick={() => scrollToTarget(0)} className="pf-foot__top-btn">
             <Roll>Back to top</Roll> &uarr;
           </button>

@@ -194,5 +194,16 @@ export default function WorkGL({ images, active }) {
 
   useEffect(() => { api.current.set?.(active); }, [active]);
 
-  return <canvas ref={canvas} className="pf-workgl" aria-hidden="true" />;
+  // Belt and suspenders on top of the WebGL fade: `active` becoming null is
+  // the one signal that must always make this disappear, independent of
+  // whatever the GL buffer is doing. The uScale tween already handles the
+  // normal fade; this is what guarantees it actually goes away.
+  return (
+    <canvas
+      ref={canvas}
+      className="pf-workgl"
+      aria-hidden="true"
+      style={{ opacity: active === null ? 0 : 1, transition: "opacity 0.4s ease" }}
+    />
+  );
 }
