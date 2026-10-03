@@ -1,217 +1,118 @@
-import { useState, useEffect, useCallback } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { gsap, getLenis } from "../lib/smooth";
+import Roll from "./fx/Roll";
+import Magnetic from "./fx/Magnetic";
 
-const navItems = [
-  { id: "home",         label: "Home",         index: "01" },
-  { id: "about",        label: "About",        index: "02" },
-  { id: "skills",       label: "Skills",       index: "03" },
-  { id: "projects",     label: "Projects",     index: "04" },
-  { id: "testimonials", label: "Testimonials", index: "05" },
-  { id: "contact",      label: "Contact",      index: "06" },
+const LINKS = [
+  { id: "about", label: "About", n: "01" },
+  { id: "work", label: "Work", n: "02" },
+  { id: "skills", label: "Toolbox", n: "03" },
+  { id: "words", label: "Words", n: "04" },
+  { id: "contact", label: "Contact", n: "05" },
 ];
 
-function NavBar() {
-  const [scrolled,       setScrolled]       = useState(false);
-  const [mobileOpen,     setMobileOpen]     = useState(false);
-  const [activeSection,  setActiveSection]  = useState("home");
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const location = useLocation();
-  const isHomePage = location.pathname === "/";
+/**
+ * Fixed bar drawn with mix-blend-mode: difference, so it reads on the dark sections and
+ * flips to ink on the bone section with no per-section theming. Hides on scroll down.
+ */
+export default function Navbar() {
+  const { pathname } = useLocation();
+  const home = pathname === "/";
+  const bar = useRef(null);
+  const rail = useRef(null);
+  const menu = useRef(null);
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState("");
 
-  /* ── Scroll events ── */
+  // hide on scroll down, show on scroll up; drive the progress rail
   useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > 40);
-      const total = document.documentElement.scrollHeight - window.innerHeight;
-      if (total > 0) setScrollProgress((window.scrollY / total) * 100);
+    let id;
+    const bind = () => {
+      const lenis = getLenis();
+      if (!lenis) { id = requestAnimationFrame(bind); return; }
+      const off = lenis.on("scroll", ({ direction, scroll, limit }) => {
+        if (open) return;
+        gsap.to(bar.current, { yPercent: direction === 1 && scroll > 160 ? -120 : 0, duration: 0.6, ease: "expo.out", overwrite: true });
+        if (rail.current) rail.current.style.setProperty("--p", limit ? scroll / limit : 0);
+        if (home && limit && scroll / limit > 0.985) setActive("contact");
+      });
+      id = off;
     };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    bind();
+    return () => { if (typeof id === "function") id(); else cancelAnimationFrame(id); };
+  }, [open, home]);
 
-  /* ── Active section tracker ── */
+  // which section are we in
   useEffect(() => {
-    if (!isHomePage) return;
-    const sections = document.querySelectorAll("section[id]");
+    if (!home) { setActive(""); return undefined; }
+    const els = LINKS.filter((l) => l.id !== "contact").map((l) => document.getElementById(l.id)).filter(Boolean);
     const io = new IntersectionObserver(
-      (entries) => entries.forEach((e) => e.isIntersecting && setActiveSection(e.target.id)),
-      { rootMargin: "-40% 0px -55% 0px" }
+      (entries) => entries.forEach((e) => e.isIntersecting && setActive(e.target.id)),
+      { rootMargin: "-45% 0px -50% 0px" }
     );
-    sections.forEach((s) => io.observe(s));
+    els.forEach((el) => io.observe(el));
     return () => io.disconnect();
-  }, [isHomePage]);
+  }, [home, pathname]);
 
-  /* ── Smooth scroll on home page ── */
-  const handleNavClick = useCallback(
-    (e, id) => {
-      setMobileOpen(false);
-      if (isHomePage) {
-        e.preventDefault();
-        document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-      }
-    },
-    [isHomePage]
-  );
-
-  /* ── Lock body scroll when mobile menu open ── */
+  // full-screen menu: circle wipe from the button
   useEffect(() => {
-    document.body.style.overflow = mobileOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
-  }, [mobileOpen]);
+    const m = menu.current;
+    if (open) {
+      getLenis()?.stop();
+      gsap.set(m, { visibility: "visible" });
+      gsap.fromTo(m, { clipPath: "circle(0% at calc(100% - 52px) 40px)" }, { clipPath: "circle(150% at calc(100% - 52px) 40px)", duration: 1, ease: "expo.inOut" });
+      gsap.fromTo(".pf-menu__link span", { yPercent: 110 }, { yPercent: 0, duration: 1, ease: "expo.out", stagger: 0.06, delay: 0.35 });
+    } else if (m.style.visibility === "visible") {
+      getLenis()?.start();
+      gsap.to(m, { clipPath: "circle(0% at calc(100% - 52px) 40px)", duration: 0.7, ease: "expo.inOut", onComplete: () => gsap.set(m, { visibility: "hidden" }) });
+    }
+  }, [open]);
+
+  useEffect(() => setOpen(false), [pathname]);
 
   return (
     <>
-      <motion.nav
-        className={`pf-nav ${scrolled ? "pf-nav--scrolled" : ""}`}
-        initial={{ y: -80, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.7, delay: 1.4, ease: [0.16, 1, 0.3, 1] }}
-      >
-        <div className="pf-nav__inner">
+      <header ref={bar} className="pf-nav">
+        <a href="/" className="pf-nav__logo" aria-label="Home" data-cursor="Home">
+          <Roll>Imoh</Roll><sup>&reg;</sup>
+        </a>
 
-          {/* Logo */}
-          <a href="/" className="pf-nav__logo">
-            <span className="pf-nav__logo-text">IMOH</span>
-            <span className="pf-nav__logo-dot" />
+        <nav className="pf-nav__links" aria-label="Primary">
+          {LINKS.map((l) => (
+            <a key={l.id} href={`/#${l.id}`} className={active === l.id && home ? "is-active" : ""}>
+              <i />
+              <Roll>{l.label}</Roll>
+            </a>
+          ))}
+          <a href="/thoughts" className={pathname.startsWith("/thoughts") ? "is-active" : ""}>
+            <i />
+            <Roll>Thoughts</Roll>
           </a>
+        </nav>
 
-          {/* Desktop links */}
-          <ul className="pf-nav__links">
-            {navItems.map((item) =>
-              isHomePage ? (
-                <li key={item.id}>
-                  <a
-                    href={`#${item.id}`}
-                    className={`pf-nav__link ${activeSection === item.id ? "pf-nav__link--active" : ""}`}
-                    onClick={(e) => handleNavClick(e, item.id)}
-                  >
-                    <span className="pf-nav__link-index">{item.index}</span>
-                    {item.label}
-                  </a>
-                </li>
-              ) : (
-                <li key={item.id}>
-                  <Link
-                    to={`/#${item.id}`}
-                    className="pf-nav__link"
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    <span className="pf-nav__link-index">{item.index}</span>
-                    {item.label}
-                  </Link>
-                </li>
-              )
-            )}
-            <li>
-              <Link
-                to="/thoughts"
-                className={`pf-nav__link pf-nav__link--blog ${location.pathname.startsWith("/thoughts") ? "pf-nav__link--active" : ""}`}
-                onClick={() => setMobileOpen(false)}
-              >
-                Thoughts
-              </Link>
-            </li>
-          </ul>
-
-          {/* Hamburger */}
-          <button
-            className={`pf-nav__hamburger ${mobileOpen ? "is-open" : ""}`}
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Toggle menu"
-          >
-            <span /><span /><span />
+        <Magnetic strength={0.5} className="pf-nav__menu-wrap">
+          <button className={`pf-nav__menu${open ? " is-open" : ""}`} onClick={() => setOpen(!open)} aria-expanded={open} aria-label="Menu">
+            <span /><span />
           </button>
+        </Magnetic>
+      </header>
+
+      <div ref={rail} className="pf-rail" aria-hidden="true"><span /></div>
+
+      <div ref={menu} className="pf-menu" style={{ visibility: "hidden" }}>
+        <nav className="pf-menu__nav" aria-label="Menu">
+          {[...LINKS, { id: "thoughts", label: "Thoughts", n: "06", href: "/thoughts" }].map((l) => (
+            <a key={l.id} href={l.href || `/#${l.id}`} className="pf-menu__link" onClick={() => setOpen(false)}>
+              <span><em>{l.n}</em>{l.label}</span>
+            </a>
+          ))}
+        </nav>
+        <div className="pf-menu__foot">
+          <a href="mailto:imohokonp@gmail.com">imohokonp@gmail.com</a>
+          <span>Lagos, Nigeria</span>
         </div>
-
-        {/* Scroll progress bar */}
-        <div className="pf-nav__progress-track">
-          <motion.div
-            className="pf-nav__progress-fill"
-            style={{ scaleX: scrollProgress / 100, originX: 0 }}
-          />
-        </div>
-      </motion.nav>
-
-      {/* Mobile drawer */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <>
-            <motion.div
-              key="backdrop"
-              className="pf-mobile-backdrop"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              onClick={() => setMobileOpen(false)}
-            />
-            <motion.div
-              key="drawer"
-              className="pf-mobile-drawer"
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-            >
-              {/* Close */}
-              <button
-                className="pf-mobile-drawer__close"
-                onClick={() => setMobileOpen(false)}
-                aria-label="Close menu"
-              >
-                ✕
-              </button>
-
-              <ul className="pf-mobile-drawer__links">
-                {navItems.map((item, i) => (
-                  <motion.li
-                    key={item.id}
-                    initial={{ opacity: 0, x: 30 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.1 + i * 0.06, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                  >
-                    {isHomePage ? (
-                      <a
-                        href={`#${item.id}`}
-                        className={`pf-mobile-drawer__link ${activeSection === item.id ? "is-active" : ""}`}
-                        onClick={(e) => handleNavClick(e, item.id)}
-                      >
-                        <span className="pf-mobile-drawer__index">{item.index}</span>
-                        {item.label}
-                      </a>
-                    ) : (
-                      <Link
-                        to={`/#${item.id}`}
-                        className="pf-mobile-drawer__link"
-                        onClick={() => setMobileOpen(false)}
-                      >
-                        <span className="pf-mobile-drawer__index">{item.index}</span>
-                        {item.label}
-                      </Link>
-                    )}
-                  </motion.li>
-                ))}
-                <motion.li
-                  initial={{ opacity: 0, x: 30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.1 + navItems.length * 0.06, duration: 0.4 }}
-                >
-                  <Link
-                    to="/thoughts"
-                    className="pf-mobile-drawer__link"
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    Thoughts
-                  </Link>
-                </motion.li>
-              </ul>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+      </div>
     </>
   );
 }
-
-export default NavBar;
