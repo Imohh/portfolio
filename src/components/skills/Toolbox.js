@@ -1,13 +1,13 @@
 import { useEffect, useRef } from "react";
 import Matter from "matter-js";
-import { gsap, ScrollTrigger, prefersReducedMotion, isFinePointer } from "../../lib/smooth";
+import { gsap, ScrollTrigger, prefersReducedMotion } from "../../lib/smooth";
 
 const { Engine, Composite, Bodies, Body, Mouse, MouseConstraint } = Matter;
 
 /**
  * Real rigid-body physics (Matter.js) driving plain DOM nodes: every pill is a chamfered body,
  * the engine owns position + rotation, React owns the markup. Drops in when scrolled to,
- * and can be grabbed and thrown with the mouse.
+ * and can be grabbed and thrown with the mouse or a finger.
  */
 export default function Toolbox({ items }) {
   const box = useRef(null);
@@ -50,16 +50,36 @@ export default function Toolbox({ items }) {
       return b;
     });
 
-    let mc;
-    if (isFinePointer()) {
-      const mouse = Mouse.create(el);
-      // Matter swallows the wheel by default; give it back to the page.
-      mouse.element.removeEventListener("wheel", mouse.mousewheel);
-      mouse.element.removeEventListener("mousewheel", mouse.mousewheel);
-      mouse.element.removeEventListener("DOMMouseScroll", mouse.mousewheel);
-      mc = MouseConstraint.create(engine, { mouse, constraint: { stiffness: 0.18, damping: 0.1, render: { visible: false } } });
-      Composite.add(engine.world, mc);
-    }
+    // Matter's own touch handlers preventDefault() unconditionally for any
+    // touch anywhere on `el`, not just on a pill — left as-is, that traps
+    // every swipe that merely passes through this section, so touch was
+    // disabled here entirely. Gate it instead: only let Matter see a touch
+    // sequence that actually started on a pill, so grabbing one still works
+    // but swiping past empty space in the box still scrolls like normal.
+    // Registered before Mouse.create(el) wires its own listeners onto the
+    // same element, so this genuinely runs first — same-element, same-phase
+    // listeners fire in registration order, and Mouse.create is what adds
+    // Matter's, a line below.
+    let pillTouch = false;
+    const gateTouch = (e) => {
+      if (!e.changedTouches) return; // real mouse input is unaffected
+      if (e.type === "touchstart") pillTouch = !!e.target.closest?.("[data-pill]");
+      if (!pillTouch) e.stopImmediatePropagation();
+      if (e.type === "touchend" || e.type === "touchcancel") pillTouch = false;
+    };
+    el.addEventListener("touchstart", gateTouch, { passive: true });
+    el.addEventListener("touchmove", gateTouch, { passive: true });
+    el.addEventListener("touchend", gateTouch, { passive: true });
+    el.addEventListener("touchcancel", gateTouch, { passive: true });
+
+    const mouse = Mouse.create(el);
+    // Matter swallows the wheel by default; give it back to the page.
+    mouse.element.removeEventListener("wheel", mouse.mousewheel);
+    mouse.element.removeEventListener("mousewheel", mouse.mousewheel);
+    mouse.element.removeEventListener("DOMMouseScroll", mouse.mousewheel);
+
+    const mc = MouseConstraint.create(engine, { mouse, constraint: { stiffness: 0.18, damping: 0.1, render: { visible: false } } });
+    Composite.add(engine.world, mc);
 
     const drop = () => {
       if (dropped) return;
@@ -104,6 +124,10 @@ export default function Toolbox({ items }) {
       gsap.ticker.remove(tick);
       st.kill();
       window.removeEventListener("resize", onResize);
+      el.removeEventListener("touchstart", gateTouch);
+      el.removeEventListener("touchmove", gateTouch);
+      el.removeEventListener("touchend", gateTouch);
+      el.removeEventListener("touchcancel", gateTouch);
       Composite.clear(engine.world, false);
       Engine.clear(engine);
     };

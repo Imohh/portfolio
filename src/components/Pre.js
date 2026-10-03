@@ -27,6 +27,7 @@ function Pre({ onReveal, onDone }) {
   useEffect(() => {
     if (prefersReducedMotion()) {
       onReveal();
+      gsap.set(root.current, { pointerEvents: "none" }); // see the same note below — the page is live now, stop blocking taps to it
       const t = gsap.to(root.current, { opacity: 0, duration: 0.5, delay: 0.3, onComplete: onDone });
       return () => t.kill();
     }
@@ -118,6 +119,12 @@ function Pre({ onReveal, onDone }) {
         .to(".pf-pre__ui", { opacity: 0, duration: 0.35, ease: "power2.out" }, ">+=0.15")
         .add(() => {
           clipG.current.removeAttribute("clip-path");
+          // The real page is live underneath from this exact moment, but this
+          // overlay — opaque or not — still sits on top with no pointer-events
+          // of its own set, so it keeps swallowing every tap for the ~2s dive
+          // still ahead of it. Release it here, the same moment the page
+          // actually becomes the thing to interact with.
+          gsap.set(root.current, { pointerEvents: "none" });
           onReveal();                                  // hero starts playing behind the windows
         }, "<")
         .to([lime.current, dark.current], { opacity: 0, duration: 0.4, ease: "power1.out" }, "<0.05")
