@@ -12,6 +12,9 @@ const LINKS = [
   { id: "contact", label: "Contact", n: "05" },
 ];
 
+/** Thoughts link is hidden for now; the /thoughts pages still work if visited directly. Set to true to show it again. */
+const SHOW_THOUGHTS = false;
+
 /**
  * Fixed bar drawn with mix-blend-mode: difference, so it reads on the dark sections and
  * flips to ink on the bone section with no per-section theming. Hides on scroll down.
@@ -85,10 +88,10 @@ export default function Navbar() {
               <Roll>{l.label}</Roll>
             </a>
           ))}
-          <a href="/thoughts" className={pathname.startsWith("/thoughts") ? "is-active" : ""}>
+          {/* <a href="/thoughts" className={pathname.startsWith("/thoughts") ? "is-active" : ""}>
             <i />
             <Roll>Thoughts</Roll>
-          </a>
+          </a> */}
         </nav>
 
         <Magnetic strength={0.5} className="pf-nav__menu-wrap">
@@ -102,7 +105,7 @@ export default function Navbar() {
 
       <div ref={menu} className="pf-menu" style={{ visibility: "hidden" }}>
         <nav className="pf-menu__nav" aria-label="Menu">
-          {[...LINKS, { id: "thoughts", label: "Thoughts", n: "06", href: "/thoughts" }].map((l) => (
+          {[...LINKS, ...(SHOW_THOUGHTS ? [{ id: "thoughts", label: "Thoughts", n: "06", href: "/thoughts" }] : [])].map((l) => (
             <a key={l.id} href={l.href || `/#${l.id}`} className="pf-menu__link" onClick={() => setOpen(false)}>
               <span><em>{l.n}</em>{l.label}</span>
             </a>
