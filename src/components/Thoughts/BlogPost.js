@@ -1,818 +1,280 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet";
-import {
-  FaShareAlt,
-  FaFacebook,
-  FaTwitter,
-  FaWhatsapp,
-  FaEnvelope,
-} from "react-icons/fa";
+import { BsArrowLeft, BsArrowUpRight } from "react-icons/bs";
+import { FaFacebookF, FaWhatsapp, FaEnvelope, FaLinkedinIn, FaLink, FaTwitter } from "react-icons/fa";
 import { useBlogPost } from "../../hooks/useBlogPost";
 import { toast, useToast } from "../ui/toast";
-// import BlogPostSkeleton from "../Loader/BlogPostSkeleton";
+import { gsap, ScrollTrigger } from "../../lib/smooth";
+import Split from "../fx/Split";
+import Roll from "../fx/Roll";
+import Magnetic from "../fx/Magnetic";
+import { Label } from "../../sections/Bits";
+import BlogPostSkeleton from "../Loader/BlogPostSkeleton";
+import { sentence } from "./BlogList";
 
 function Toaster() {
   const { toasts } = useToast();
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
-  useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const isMobile = windowWidth < 768;
-
   return (
-    <div
-      style={{
-        position: "fixed",
-        top: isMobile ? "1rem" : "2rem",
-        right: isMobile ? "1rem" : "2rem",
-        display: "flex",
-        flexDirection: "column",
-        gap: "1rem",
-        zIndex: 9999,
-      }}
-    >
+    <div className="pf-toasts" role="status" aria-live="polite">
       {toasts.map((t) => (
-        <div
-          key={t.id}
-          style={{
-            padding: isMobile ? "1rem" : "1.25rem",
-            background: "rgba(30, 30, 30, 0.98)",
-            backdropFilter: "blur(10px)",
-            borderRadius: "12px",
-            border: "1px solid rgba(139, 92, 246, 0.3)",
-            color: "#ffffff",
-            minWidth: isMobile ? "250px" : "300px",
-            boxShadow: "0 4px 20px rgba(0, 0, 0, 0.5)",
-            transition: "opacity 0.3s ease, transform 0.3s ease",
-            opacity: t.open ? 1 : 0,
-            transform: t.open ? "translateX(0)" : "translateX(20px)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <span style={{ fontSize: isMobile ? "0.95rem" : "1rem" }}>
-            {t.content}
-          </span>
-          <span
-            style={{
-              cursor: "pointer",
-              fontSize: "1.25rem",
-              opacity: 0.7,
-              transition: "opacity 0.2s ease",
-            }}
-            onClick={() => t.dismiss()}
-            onMouseEnter={(e) => (e.currentTarget.style.opacity = 1)}
-            onMouseLeave={(e) => (e.currentTarget.style.opacity = 0.7)}
-          >
-            ×
-          </span>
+        <div key={t.id} className="pf-toast" style={{ opacity: t.open ? 1 : 0, transform: t.open ? "none" : "translateY(12px)" }}>
+          <i />
+          <span>{t.content}</span>
+          <button onClick={() => t.dismiss()} aria-label="Dismiss">×</button>
         </div>
       ))}
     </div>
   );
 }
 
+const textOf = (block) => block?.text || block?.content || "";
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 const BlogPost = () => {
   const { slug } = useParams();
   const { post, comments, loading, error, addComment } = useBlogPost(slug);
+  const root = useRef(null);
 
-  const [showShareOptions, setShowShareOptions] = useState(false);
-
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [website, setWebsite] = useState("");
-  const [newComment, setNewComment] = useState("");
+  const [form, setForm] = useState({ name: "", email: "", website: "", text: "" });
+  const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [copied, setCopied] = useState(false);
 
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
+  // keep the article from being casually copied (images, right-click, save/copy shortcuts)
   useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+    if (loading) return undefined;
+    const preventContextMenu = (e) => e.preventDefault();
+    const preventDragStart = (e) => { if (e.target.tagName === "IMG") e.preventDefault(); };
+    const preventKeyboardShortcuts = (e) => {
+      // still allow normal typing/copy inside the comment form
+      if (e.target.closest?.(".pf-form")) return;
+      if ((e.ctrlKey || e.metaKey) && ["s", "c", "a", "p", "u"].includes(e.key.toLowerCase())) e.preventDefault();
+      if (e.keyCode === 123) e.preventDefault();
+    };
+    document.addEventListener("contextmenu", preventContextMenu);
+    document.addEventListener("dragstart", preventDragStart);
+    document.addEventListener("keydown", preventKeyboardShortcuts);
+    return () => {
+      document.removeEventListener("contextmenu", preventContextMenu);
+      document.removeEventListener("dragstart", preventDragStart);
+      document.removeEventListener("keydown", preventKeyboardShortcuts);
+    };
+  }, [loading]);
 
-  // Prevent right-click context menu
-  // useEffect(() => {
-  //   const preventContextMenu = (e) => {
-  //     e.preventDefault();
-  //     return false;
-  //   };
+  // cover eases out of its zoom as it scrolls; body + comments rise in
+  useLayoutEffect(() => {
+    if (loading || !post || !root.current) return undefined;
+    const ctx = gsap.context(() => {
+      const cover = root.current.querySelector(".pf-post__cover img");
+      if (cover) {
+        gsap.to(cover, { scale: 1, ease: "none", scrollTrigger: { trigger: cover.parentNode, start: "top bottom", end: "bottom top", scrub: true } });
+      }
+      gsap.utils.toArray(".pf-rise").forEach((el) => {
+        gsap.from(el, { y: 40, opacity: 0, duration: 1.1, ease: "expo.out", scrollTrigger: { trigger: el, start: "top 92%", once: true } });
+      });
+    }, root);
+    ScrollTrigger.refresh();
+    return () => ctx.revert();
+  }, [loading, post]);
 
-  //   // Prevent dragging images
-  //   const preventDragStart = (e) => {
-  //     if (e.target.tagName === 'IMG') {
-  //       e.preventDefault();
-  //       return false;
-  //     }
-  //   };
+  // comments arriving changes the page height
+  useEffect(() => { ScrollTrigger.refresh(); }, [comments.length]);
 
-  //   // Prevent keyboard shortcuts for saving/copying
-  //   const preventKeyboardShortcuts = (e) => {
-  //     // Prevent Ctrl+S (Save), Ctrl+C (Copy), Ctrl+A (Select All), Ctrl+P (Print)
-  //     if ((e.ctrlKey || e.metaKey) && ['s', 'c', 'a', 'p', 'u'].includes(e.key.toLowerCase())) {
-  //       e.preventDefault();
-  //       return false;
-  //     }
-  //     // Prevent F12 (DevTools)
-  //     if (e.keyCode === 123) {
-  //       e.preventDefault();
-  //       return false;
-  //     }
-  //   };
+  const readMinutes = useMemo(() => {
+    const words = (post?.content ?? []).map(textOf).join(" ").split(/\s+/).filter(Boolean).length;
+    return Math.max(1, Math.round(words / 220));
+  }, [post]);
 
-  //   if (loading) {
-  //     return <BlogPostSkeleton />;
-  //   }
+  if (loading) return <BlogPostSkeleton />;
 
-  //   document.addEventListener('contextmenu', preventContextMenu);
-  //   document.addEventListener('dragstart', preventDragStart);
-  //   document.addEventListener('keydown', preventKeyboardShortcuts);
+  if (error || !post) {
+    return (
+      <section className="pf-thoughts pf-section">
+        <div className="pf-wrap">
+          <Label n="404">Thoughts</Label>
+          <div className="pf-thoughts__state">
+            <p>{error && !/not found/i.test(error) ? "This thought couldn’t load right now" : "That thought doesn’t exist"} — <span className="pf-em">try the archive</span> instead.</p>
+            <Magnetic>
+              <Link to="/thoughts" className="pf-btn">
+                All thoughts <span className="pf-btn__ico"><BsArrowUpRight /></span>
+              </Link>
+            </Magnetic>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
-  //   return () => {
-  //     document.removeEventListener('contextmenu', preventContextMenu);
-  //     document.removeEventListener('dragstart', preventDragStart);
-  //     document.removeEventListener('keydown', preventKeyboardShortcuts);
-  //   };
-  // }, []);
+  const url = window.location.href;
+  const enc = encodeURIComponent;
+  const shares = [
+    { label: "Share on WhatsApp", icon: <FaWhatsapp />, href: `https://api.whatsapp.com/send?text=${enc(`${post.name} ${url}`)}` },
+    { label: "Share on X", icon: <FaTwitter />, href: `https://twitter.com/intent/tweet?url=${enc(url)}&text=${enc(post.name)}` },
+    { label: "Share on LinkedIn", icon: <FaLinkedinIn />, href: `https://www.linkedin.com/sharing/share-offsite/?url=${enc(url)}` },
+    { label: "Share on Facebook", icon: <FaFacebookF />, href: `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}` },
+    { label: "Share by email", icon: <FaEnvelope />, href: `mailto:?subject=${enc(post.name)}&body=${enc(url)}` },
+  ];
 
-  useEffect(() => {
-  if (loading) return;
-
-  const preventContextMenu = (e) => {
-    e.preventDefault();
-  };
-
-  const preventDragStart = (e) => {
-    if (e.target.tagName === "IMG") {
-      e.preventDefault();
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
+    } catch {
+      toast({ content: "Couldn’t copy — copy the address from your browser instead." });
     }
   };
 
-  const preventKeyboardShortcuts = (e) => {
-    if ((e.ctrlKey || e.metaKey) && ["s","c","a","p","u"].includes(e.key.toLowerCase())) {
-      e.preventDefault();
-    }
-
-    if (e.keyCode === 123) {
-      e.preventDefault();
-    }
+  const set = (k) => (e) => {
+    setForm((f) => ({ ...f, [k]: e.target.value }));
+    if (errors[k]) setErrors(({ [k]: _drop, ...rest }) => rest);
   };
-
-  document.addEventListener("contextmenu", preventContextMenu);
-  document.addEventListener("dragstart", preventDragStart);
-  document.addEventListener("keydown", preventKeyboardShortcuts);
-
-  return () => {
-    document.removeEventListener("contextmenu", preventContextMenu);
-    document.removeEventListener("dragstart", preventDragStart);
-    document.removeEventListener("keydown", preventKeyboardShortcuts);
-  };
-}, [loading]);
-
-  const isMobile = windowWidth < 768;
-
-  const postUrl = encodeURIComponent(window.location.href);
 
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
-
-    if (!name || !email || !newComment) {
-      alert("Name, email and comment are required");
-      return;
-    }
-
-    // Basic email validation (matches backend regex)
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      alert("Invalid email format");
-      return;
-    }
+    const next = {};
+    if (!form.name.trim()) next.name = "Your name, please";
+    if (!form.email.trim()) next.email = "Needed (never shown)";
+    else if (!EMAIL_RE.test(form.email.trim())) next.email = "That email looks off";
+    if (!form.text.trim()) next.text = "Write something first";
+    setErrors(next);
+    if (Object.keys(next).length) return;
 
     setIsSubmitting(true);
     try {
-      await addComment({ name, email, website, text: newComment });
-      setName("");
-      setEmail("");
-      setWebsite("");
-      setNewComment("");
-      toast({ content: "Comment posted successfully!" });
+      await addComment({ name: form.name.trim(), email: form.email.trim(), website: form.website.trim(), text: form.text.trim() });
+      setForm({ name: "", email: "", website: "", text: "" });
+      toast({ content: "Thanks — your comment is up." });
     } catch (err) {
-      alert(err.message);
+      toast({ content: err.message || "Couldn’t post your comment. Please try again." });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  if (error) return <div>Error: {error}</div>;
-  if (!post) return <div>Post not found</div>;
+  const ShareButtons = (
+    <div className="pf-share">
+      {shares.map((s) => (
+        <a key={s.label} className="pf-round" href={s.href} target={s.href.startsWith("mailto:") ? undefined : "_blank"} rel="noopener noreferrer" aria-label={s.label} title={s.label}>
+          {s.icon}
+        </a>
+      ))}
+      <button className="pf-round" onClick={copyLink} aria-label="Copy link" title="Copy link">
+        <FaLink />
+      </button>
+    </div>
+  );
 
   return (
     <>
       <Helmet>
-        <title style={{
-          textTransform: "capitalize"
-        }}>{post.name} | Imoh Precious</title>
+        <title>{`${sentence(post.name)} | Imoh Precious`}</title>
         <meta name="description" content={post.excerpt || post.name} />
       </Helmet>
 
-      <section
-        style={{
-          background: "linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)",
-          minHeight: "100vh",
-          padding: isMobile ? "4rem 1rem" : "8rem 1.25rem",
-          position: "relative",
-          userSelect: "none",
-          WebkitUserSelect: "none",
-          MozUserSelect: "none",
-          msUserSelect: "none",
-        }}
-      >
-        <style>
-          {`
-            @keyframes spin {
-              0% { transform: rotate(0deg); }
-              100% { transform: rotate(360deg); }
-            }
-          `}
-        </style>
-        <div
-          style={{
-            maxWidth: isMobile ? "100%" : "900px",
-            margin: "0 auto",
-          }}
-        >
-          {/* SHARE BUTTON */}
-          <div
-            style={{
-              position: isMobile ? "fixed" : "absolute",
-              top: isMobile ? "auto" : "8rem",
-              bottom: isMobile ? "2rem" : "auto",
-              right: isMobile ? "1rem" : "2rem",
-              zIndex: 10,
-            }}
-          >
-            <button
-              onClick={() => setShowShareOptions(!showShareOptions)}
-              style={{
-                padding: isMobile ? "0.75rem" : "0.875rem",
-                background: "linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)",
-                color: "#ffffff",
-                border: "none",
-                borderRadius: "50%",
-                cursor: "pointer",
-                boxShadow: "0 4px 15px rgba(139, 92, 246, 0.4)",
-                transition: "all 0.3s ease",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: isMobile ? "1rem" : "1.125rem",
-              }}
-              onMouseEnter={(e) => {
-                if (!isMobile) {
-                  e.currentTarget.style.transform = "scale(1.1)";
-                  e.currentTarget.style.boxShadow =
-                    "0 6px 20px rgba(139, 92, 246, 0.6)";
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!isMobile) {
-                  e.currentTarget.style.transform = "scale(1)";
-                  e.currentTarget.style.boxShadow =
-                    "0 4px 15px rgba(139, 92, 246, 0.4)";
-                }
-              }}
-            >
-              <FaShareAlt />
-            </button>
+      <article ref={root} className="pf-post">
+        <div className="pf-post__inner">
+          <Link to="/thoughts" className="pf-label pf-post__back pf-hov">
+            <BsArrowLeft /> <Roll>All thoughts</Roll>
+          </Link>
 
-            {showShareOptions && (
-              <div
-                style={{
-                  position: "absolute",
-                  right: 0,
-                  bottom: isMobile ? "100%" : "auto",
-                  top: isMobile ? "auto" : "100%",
-                  marginTop: isMobile ? "0" : "0.75rem",
-                  marginBottom: isMobile ? "0.75rem" : "0",
-                  width: isMobile ? "200px" : "220px",
-                  background: "rgba(30, 30, 30, 0.98)",
-                  backdropFilter: "blur(10px)",
-                  borderRadius: "12px",
-                  padding: "0.75rem",
-                  boxShadow: "0 10px 40px rgba(0, 0, 0, 0.5)",
-                  border: "1px solid rgba(139, 92, 246, 0.3)",
-                }}
-              >
-                {[
-                  {
-                    icon: FaFacebook,
-                    label: "Facebook",
-                    color: "#1877f2",
-                    url: `https://www.facebook.com/sharer/sharer.php?u=${postUrl}`,
-                  },
-                  {
-                    icon: FaTwitter,
-                    label: "Twitter",
-                    color: "#1da1f2",
-                    url: `https://twitter.com/intent/tweet?url=${postUrl}&text=${post.name}`,
-                  },
-                  {
-                    icon: FaWhatsapp,
-                    label: "WhatsApp",
-                    color: "#25d366",
-                    url: `https://api.whatsapp.com/send?text=${post.name} ${postUrl}`,
-                  },
-                  {
-                    icon: FaEnvelope,
-                    label: "Email",
-                    color: "#ea4335",
-                    url: `mailto:?subject=${post.name}&body=${postUrl}`,
-                  },
-                ].map((social, idx) => (
-                  <a
-                    key={idx}
-                    href={social.url}
-                    target={social.label !== "Email" ? "_blank" : undefined}
-                    rel="noopener noreferrer"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.75rem",
-                      padding: "0.75rem",
-                      color: "#ffffff",
-                      textDecoration: "none",
-                      borderRadius: "8px",
-                      transition: "all 0.2s ease",
-                      fontSize: isMobile ? "0.9rem" : "0.95rem",
-                      fontWeight: "500",
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!isMobile) {
-                        e.currentTarget.style.background =
-                          "rgba(139, 92, 246, 0.15)";
-                        e.currentTarget.style.transform = "translateX(5px)";
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!isMobile) {
-                        e.currentTarget.style.background = "transparent";
-                        e.currentTarget.style.transform = "translateX(0)";
-                      }
-                    }}
-                  >
-                    <social.icon
-                      style={{ color: social.color, fontSize: "1.25rem" }}
-                    />
-                    {social.label}
-                  </a>
-                ))}
-              </div>
-            )}
+          <div className="pf-label pf-post__meta">
+            <span>{post.date}</span>
+            {post.author && <span>By {post.author}</span>}
+            <span>{readMinutes} min read</span>
           </div>
+          <Split as="h1" text={sentence(post.name).replace(/\*/g, "")} className="pf-post__title" stagger={0.03} />
 
-          {/* COVER IMAGE */}
           {post.coverImage && (
-            <div
-              style={{
-                width: "100%",
-                borderRadius: "16px",
-                overflow: "hidden",
-                marginBottom: isMobile ? "2rem" : "3rem",
-                boxShadow: "0 20px 60px rgba(0, 0, 0, 0.5)",
-                position: "relative",
-              }}
-            >
-              <img
-                src={post.coverImage}
-                alt={post.name}
-                draggable="false"
-                onContextMenu={(e) => e.preventDefault()}
-                style={{
-                  width: "100%",
-                  height: "auto",
-                  objectFit: "contain",
-                  transition: "transform 0.3s ease",
-                  pointerEvents: "none",
-                  userSelect: "none",
-                  WebkitUserDrag: "none",
-                  display: "block",
-                }}
-                onMouseEnter={(e) => {
-                  if (!isMobile) e.currentTarget.style.transform = "scale(1.05)";
-                }}
-                onMouseLeave={(e) => {
-                  if (!isMobile) e.currentTarget.style.transform = "scale(1)";
-                }}
-              />
-              <div
-                style={{
-                  position: "absolute",
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  height: isMobile ? "100px" : "150px",
-                  background:
-                    "linear-gradient(to top, rgba(26, 26, 26, 0.9) 0%, transparent 100%)",
-                }}
-              />
-            </div>
+            <figure className="pf-post__cover">
+              <img src={post.coverImage} alt={post.name} draggable="false" onContextMenu={(e) => e.preventDefault()} />
+            </figure>
           )}
 
-          {/* TITLE */}
-          <h1
-            style={{
-              color: "#a78bfa",
-              fontSize: isMobile ? "2rem" : "3rem",
-              marginBottom: "1rem",
-              textTransform: "capitalize",
-              fontWeight: "700",
-              lineHeight: "1.2",
-              letterSpacing: "-0.02em",
-              textShadow: "0 2px 10px rgba(139, 92, 246, 0.3)",
-            }}
-          >
-            {post.name}
-          </h1>
+          <div className="pf-post__layout">
+            <aside className="pf-post__aside">
+              <span className="pf-label">{copied ? <span className="pf-share__copied">Link copied ✓</span> : "Share"}</span>
+              {ShareButtons}
+            </aside>
 
-          {/* META */}
-          <div
-            style={{
-              fontSize: isMobile ? "0.85rem" : "0.95rem",
-              color: "#999999",
-              marginBottom: isMobile ? "2rem" : "3rem",
-              display: "flex",
-              alignItems: "center",
-              gap: "0.75rem",
-              borderLeft: "3px solid #8b5cf6",
-              paddingLeft: "1rem",
-              fontWeight: "300",
-            }}
-          >
-            <span>{post.date}</span>
-            <span style={{ color: "#8b5cf6" }}>•</span>
-            <span style={{ textTransform: "capitalize" }}>{post.author}</span>
-          </div>
+            <div className="pf-post__body">
+              {post.content?.map((block, index) => {
+                if (textOf(block)) return <p key={index}>{textOf(block)}</p>;
+                if (block.src) {
+                  return (
+                    <figure key={index} className="pf-post__fig pf-rise">
+                      <img src={block.src} alt={block.caption || ""} draggable="false" onContextMenu={(e) => e.preventDefault()} />
+                      {block.caption && <figcaption className="pf-label">{block.caption}</figcaption>}
+                    </figure>
+                  );
+                }
+                return null;
+              })}
 
-          {/* CONTENT BLOCKS */}
-          <div
-            style={{
-              color: "#e0e0e0",
-              lineHeight: "1.9",
-              fontSize: isMobile ? "1rem" : "1.125rem",
-              fontWeight: "300",
-            }}
-          >
-            {post.content?.map((block, index) => {
-              if (block.text || block.content) {
-                return (
-                  <p
-                    key={index}
-                    style={{
-                      marginBottom: isMobile ? "1.25rem" : "1.75rem",
-                      textAlign: "justify",
-                    }}
-                  >
-                    {block.text || block.content}
-                  </p>
-                );
-              }
+              <section className="pf-comments" aria-label="Comments">
+                <h2 className="pf-comments__title pf-rise">
+                  Comments<sup>({String(comments.length).padStart(2, "0")})</sup>
+                </h2>
 
-              if (block.src) {
-                return (
-                  <div
-                    key={index}
-                    style={{ marginBottom: isMobile ? "1.5rem" : "2.5rem" }}
-                  >
-                    <div
-                      style={{
-                        borderRadius: "12px",
-                        overflow: "hidden",
-                        boxShadow: "0 10px 30px rgba(0, 0, 0, 0.4)",
-                      }}
-                    >
-                      <img
-                        src={block.src}
-                        alt=""
-                        draggable="false"
-                        onContextMenu={(e) => e.preventDefault()}
-                        style={{
-                          width: "100%",
-                          display: "block",
-                          transition: "transform 0.3s ease",
-                          pointerEvents: "none",
-                          userSelect: "none",
-                          WebkitUserDrag: "none",
-                        }}
-                        onMouseEnter={(e) => {
-                          if (!isMobile)
-                            e.currentTarget.style.transform = "scale(1.02)";
-                        }}
-                        onMouseLeave={(e) => {
-                          if (!isMobile)
-                            e.currentTarget.style.transform = "scale(1)";
-                        }}
-                      />
-                    </div>
-                    {block.caption && (
-                      <p
-                        style={{
-                          textAlign: "center",
-                          fontSize: isMobile ? "0.8rem" : "0.9rem",
-                          fontStyle: "italic",
-                          marginTop: "0.75rem",
-                          color: "#999999",
-                        }}
-                      >
-                        {block.caption}
-                      </p>
-                    )}
-                  </div>
-                );
-              }
-
-              return null;
-            })}
-          </div>
-
-          {/* COMMENTS SECTION */}
-          <div
-            style={{
-              marginTop: isMobile ? "3rem" : "5rem",
-              paddingTop: isMobile ? "2rem" : "3rem",
-              borderTop: "1px solid rgba(139, 92, 246, 0.2)",
-            }}
-          >
-            <h2
-              style={{
-                fontSize: isMobile ? "1.5rem" : "2rem",
-                color: "#a78bfa",
-                marginBottom: isMobile ? "1.5rem" : "2.5rem",
-                fontWeight: "600",
-                letterSpacing: "0.05em",
-              }}
-            >
-              Comments ({comments.length})
-            </h2>
-
-            {comments.length ? (
-              <div style={{ marginBottom: isMobile ? "2rem" : "3rem" }}>
-                {comments.map((c, i) => (
-                  <div
-                    key={i}
-                    style={{
-                      marginBottom: "1.5rem",
-                      padding: isMobile ? "1rem" : "1.5rem",
-                      background: "rgba(30, 30, 30, 0.6)",
-                      backdropFilter: "blur(10px)",
-                      borderRadius: "12px",
-                      border: "1px solid rgba(255, 255, 255, 0.05)",
-                      transition: "all 0.3s ease",
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!isMobile) {
-                        e.currentTarget.style.background =
-                          "rgba(30, 30, 30, 0.8)";
-                        e.currentTarget.style.borderColor =
-                          "rgba(139, 92, 246, 0.3)";
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!isMobile) {
-                        e.currentTarget.style.background =
-                          "rgba(30, 30, 30, 0.6)";
-                        e.currentTarget.style.borderColor =
-                          "rgba(255, 255, 255, 0.05)";
-                      }
-                    }}
-                  >
-                    <p
-                      style={{
-                        fontWeight: "600",
-                        textTransform: "capitalize",
-                        color: "#a78bfa",
-                        marginBottom: "0.5rem",
-                        fontSize: isMobile ? "1rem" : "1.05rem",
-                      }}
-                    >
-                      {c.name}
-                    </p>
-                    <p
-                      style={{
-                        color: "#cccccc",
-                        lineHeight: "1.7",
-                        fontSize: isMobile ? "0.95rem" : "1rem",
-                      }}
-                    >
-                      {c.text}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p
-                style={{
-                  color: "#999999",
-                  fontStyle: "italic",
-                  marginBottom: isMobile ? "2rem" : "3rem",
-                  fontSize: isMobile ? "0.95rem" : "1rem",
-                }}
-              >
-                No comments yet. Be the first to share your thoughts!
-              </p>
-            )}
-
-            {/* COMMENT FORM */}
-            <form 
-              onSubmit={handleCommentSubmit}
-              style={{
-                userSelect: "text",
-                WebkitUserSelect: "text",
-              }}
-            >
-              <h3
-                style={{
-                  fontSize: isMobile ? "1.25rem" : "1.5rem",
-                  color: "#ffffff",
-                  marginBottom: "1.5rem",
-                  fontWeight: "500",
-                }}
-              >
-                Leave a Comment
-              </h3>
-
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-                  gap: "1rem",
-                  marginBottom: "1rem",
-                }}
-              >
-                <input
-                  placeholder="Name*"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  style={{
-                    padding: isMobile ? "0.875rem 1rem" : "1rem 1.25rem",
-                    background: "rgba(30, 30, 30, 0.6)",
-                    backdropFilter: "blur(10px)",
-                    border: "1px solid rgba(255, 255, 255, 0.1)",
-                    borderRadius: "10px",
-                    color: "#ffffff",
-                    fontSize: isMobile ? "0.95rem" : "1rem",
-                    outline: "none",
-                    transition: "all 0.3s ease",
-                  }}
-                  onFocus={(e) => {
-                    e.target.style.borderColor = "#8b5cf6";
-                    e.target.style.background = "rgba(30, 30, 30, 0.8)";
-                  }}
-                  onBlur={(e) => {
-                    e.target.style.borderColor = "rgba(255, 255, 255, 0.1)";
-                    e.target.style.background = "rgba(30, 30, 30, 0.6)";
-                  }}
-                />
-                <input
-                  placeholder="Email*"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  style={{
-                    padding: isMobile ? "0.875rem 1rem" : "1rem 1.25rem",
-                    background: "rgba(30, 30, 30, 0.6)",
-                    backdropFilter: "blur(10px)",
-                    border: "1px solid rgba(255, 255, 255, 0.1)",
-                    borderRadius: "10px",
-                    color: "#ffffff",
-                    fontSize: isMobile ? "0.95rem" : "1rem",
-                    outline: "none",
-                    transition: "all 0.3s ease",
-                  }}
-                  onFocus={(e) => {
-                    e.target.style.borderColor = "#8b5cf6";
-                    e.target.style.background = "rgba(30, 30, 30, 0.8)";
-                  }}
-                  onBlur={(e) => {
-                    e.target.style.borderColor = "rgba(255, 255, 255, 0.1)";
-                    e.target.style.background = "rgba(30, 30, 30, 0.6)";
-                  }}
-                />
-                <input
-                  placeholder="Website"
-                  value={website}
-                  onChange={(e) => setWebsite(e.target.value)}
-                  style={{
-                    padding: isMobile ? "0.875rem 1rem" : "1rem 1.25rem",
-                    background: "rgba(30, 30, 30, 0.6)",
-                    backdropFilter: "blur(10px)",
-                    border: "1px solid rgba(255, 255, 255, 0.1)",
-                    borderRadius: "10px",
-                    color: "#ffffff",
-                    fontSize: isMobile ? "0.95rem" : "1rem",
-                    outline: "none",
-                    transition: "all 0.3s ease",
-                  }}
-                  onFocus={(e) => {
-                    e.target.style.borderColor = "#8b5cf6";
-                    e.target.style.background = "rgba(30, 30, 30, 0.8)";
-                  }}
-                  onBlur={(e) => {
-                    e.target.style.borderColor = "rgba(255, 255, 255, 0.1)";
-                    e.target.style.background = "rgba(30, 30, 30, 0.6)";
-                  }}
-                />
-              </div>
-
-              <textarea
-                rows="5"
-                placeholder="Your comment..."
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                style={{
-                  width: "100%",
-                  padding: isMobile ? "0.875rem 1rem" : "1rem 1.25rem",
-                  background: "rgba(30, 30, 30, 0.6)",
-                  backdropFilter: "blur(10px)",
-                  border: "1px solid rgba(255, 255, 255, 0.1)",
-                  borderRadius: "10px",
-                  color: "#ffffff",
-                  fontSize: isMobile ? "0.95rem" : "1rem",
-                  outline: "none",
-                  resize: "vertical",
-                  fontFamily: "inherit",
-                  marginBottom: "1.5rem",
-                  transition: "all 0.3s ease",
-                }}
-                onFocus={(e) => {
-                  e.target.style.borderColor = "#8b5cf6";
-                  e.target.style.background = "rgba(30, 30, 30, 0.8)";
-                }}
-                onBlur={(e) => {
-                  e.target.style.borderColor = "rgba(255, 255, 255, 0.1)";
-                  e.target.style.background = "rgba(30, 30, 30, 0.6)";
-                }}
-              />
-
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                style={{
-                  background: "linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)",
-                  color: "#ffffff",
-                  padding: isMobile ? "0.75rem 2rem" : "0.875rem 2.5rem",
-                  borderRadius: "10px",
-                  border: "none",
-                  fontWeight: "600",
-                  fontSize: isMobile ? "0.95rem" : "1rem",
-                  cursor: isSubmitting ? "not-allowed" : "pointer",
-                  boxShadow: "0 4px 15px rgba(139, 92, 246, 0.4)",
-                  transition: "all 0.3s ease",
-                  letterSpacing: "0.05em",
-                  opacity: isSubmitting ? 0.7 : 1,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "0.5rem",
-                }}
-                onMouseEnter={(e) => {
-                  if (!isMobile && !isSubmitting) {
-                    e.currentTarget.style.transform = "translateY(-2px)";
-                    e.currentTarget.style.boxShadow =
-                      "0 6px 20px rgba(139, 92, 246, 0.6)";
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isMobile) {
-                    e.currentTarget.style.transform = "translateY(0)";
-                    e.currentTarget.style.boxShadow =
-                      "0 4px 15px rgba(139, 92, 246, 0.4)";
-                  }
-                }}
-              >
-                {isSubmitting && (
-                  <div
-                    style={{
-                      width: "1rem",
-                      height: "1rem",
-                      border: "2px solid #ffffff",
-                      borderTop: "2px solid transparent",
-                      borderRadius: "50%",
-                      animation: "spin 0.8s linear infinite",
-                    }}
-                  />
+                {comments.length ? (
+                  <ul>
+                    {comments.map((c, i) => (
+                      <li key={c.id ?? i} className="pf-comment pf-rise">
+                        <span className="pf-comment__av" aria-hidden="true">{(c.name || "?").trim().charAt(0)}</span>
+                        <div>
+                          <p className="pf-comment__name">
+                            {c.website ? <a href={/^https?:\/\//.test(c.website) ? c.website : `https://${c.website}`} target="_blank" rel="noopener noreferrer nofollow">{c.name}</a> : c.name}
+                          </p>
+                          {(c.date || c.createdAt) && <span className="pf-label">{c.date || new Date(c.createdAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}</span>}
+                          <p className="pf-comment__text">{c.text}</p>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="pf-comments__empty">No comments yet — be the first to share a thought.</p>
                 )}
-                {isSubmitting ? "Posting..." : "Post Comment"}
-              </button>
-            </form>
+
+                <form className="pf-form pf-rise" onSubmit={handleCommentSubmit} noValidate>
+                  <h3 className="pf-form__title">Leave a <span className="pf-em">comment</span></h3>
+                  <div className="pf-form__grid">
+                    <label className={`pf-field ${errors.name ? "has-error" : ""}`}>
+                      <span className="pf-label">Name *</span>
+                      <input value={form.name} onChange={set("name")} placeholder="Ada Lovelace" autoComplete="name" />
+                      {errors.name && <span className="pf-field__err">{errors.name}</span>}
+                    </label>
+                    <label className={`pf-field ${errors.email ? "has-error" : ""}`}>
+                      <span className="pf-label">Email *</span>
+                      <input type="email" value={form.email} onChange={set("email")} placeholder="you@example.com" autoComplete="email" />
+                      {errors.email && <span className="pf-field__err">{errors.email}</span>}
+                    </label>
+                    <label className="pf-field">
+                      <span className="pf-label">Website</span>
+                      <input value={form.website} onChange={set("website")} placeholder="Optional" autoComplete="url" />
+                    </label>
+                  </div>
+                  <label className={`pf-field ${errors.text ? "has-error" : ""}`}>
+                    <span className="pf-label">Comment *</span>
+                    <textarea rows={5} value={form.text} onChange={set("text")} placeholder="What did you think?" />
+                    {errors.text && <span className="pf-field__err">{errors.text}</span>}
+                  </label>
+                  <div className="pf-form__foot">
+                    <span className="pf-label">Your email is never shown.</span>
+                    <Magnetic>
+                      <button type="submit" className="pf-btn" disabled={isSubmitting}>
+                        {isSubmitting ? "Posting…" : "Post comment"}
+                        <span className="pf-btn__ico">{isSubmitting ? <span className="pf-btn__spin" /> : <BsArrowUpRight />}</span>
+                      </button>
+                    </Magnetic>
+                  </div>
+                </form>
+              </section>
+            </div>
+            <div />
           </div>
         </div>
-      </section>
+      </article>
       <Toaster />
     </>
   );

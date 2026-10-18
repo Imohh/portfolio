@@ -18,6 +18,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./style.css";
 import "./App.css";
 import "./styles/site.css";
+import "./styles/thoughts.css";
 
 function AppContent() {
   const [loading, setLoading] = useState(true);

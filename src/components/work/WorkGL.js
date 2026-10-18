@@ -128,6 +128,9 @@ export default function WorkGL({ images, active }) {
       if (t.loaded || t.loading) return;
       t.loading = true;
       const img = new Image();
+      // ask for CORS so cross-origin images (e.g. blog covers on an image CDN) can be used as textures;
+      // if a host doesn't allow it, that preview simply never loads instead of throwing a WebGL error
+      img.crossOrigin = "anonymous";
       img.onload = () => { t.tex.image = img; t.aspect = img.naturalWidth / img.naturalHeight; t.loaded = true; };
       img.src = images[i];
     };
