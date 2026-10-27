@@ -6,7 +6,7 @@ import Roll from "../components/fx/Roll";
 import Magnetic from "../components/fx/Magnetic";
 import { socialLinks } from "../data";
 
-const ROLES = ["Frontend Engineer", "Creative Developer", "Interface Craftsman", "MERN Stack Builder"];
+const ROLES = ["Software Engineer", "Frontend Engineer"];
 
 function RoleCycle({ ready }) {
   const el = useRef(null);
@@ -52,7 +52,7 @@ export default function Hero({ ready }) {
         <HeroGL ready={ready} />
 
         <div className="pf-stage__kicker">
-          <span className="pf-mask"><span className="pf-hero__in pf-label">(Portfolio &rsquo;{String(new Date().getFullYear()).slice(2)})</span></span>
+          <span className="pf-mask"><span className="pf-hero__in pf-label">(Portfolio &rsquo;21)</span></span>
           <span className="pf-mask pf-stage__role"><span className="pf-hero__in"><RoleCycle ready={ready} /></span></span>
         </div>
 

@@ -169,7 +169,7 @@ function Pre({ onReveal, onDone }) {
       <div className="pf-pre__ui">
         <div className="pf-pre__meta">
           <span>Imoh Precious</span>
-          <span>Portfolio &mdash; {new Date().getFullYear()}</span>
+          <span>Portfolio &mdash; 2021</span>
           <span>Lagos, NG</span>
         </div>
         <div className="pf-pre__foot">

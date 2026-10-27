@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import { gsap, getLenis } from "../lib/smooth";
 import Roll from "./fx/Roll";
 import Magnetic from "./fx/Magnetic";
+import { useTransition } from "./fx/Transition";
 
 const LINKS = [
   { id: "about", label: "About", n: "01" },
@@ -21,6 +22,7 @@ const SHOW_THOUGHTS = false;
  */
 export default function Navbar() {
   const { pathname } = useLocation();
+  const { go } = useTransition();
   const home = pathname === "/";
   const bar = useRef(null);
   const rail = useRef(null);
@@ -38,7 +40,6 @@ export default function Navbar() {
         if (open) return;
         gsap.to(bar.current, { yPercent: direction === 1 && scroll > 160 ? -120 : 0, duration: 0.6, ease: "expo.out", overwrite: true });
         if (rail.current) rail.current.style.setProperty("--p", limit ? scroll / limit : 0);
-        if (home && limit && scroll / limit > 0.985) setActive("contact");
       });
       id = off;
     };
@@ -46,16 +47,31 @@ export default function Navbar() {
     return () => { if (typeof id === "function") id(); else cancelAnimationFrame(id); };
   }, [open, home]);
 
-  // which section are we in
+  // which section is under the middle of the viewport; none while in the hero
   useEffect(() => {
     if (!home) { setActive(""); return undefined; }
-    const els = LINKS.filter((l) => l.id !== "contact").map((l) => document.getElementById(l.id)).filter(Boolean);
-    const io = new IntersectionObserver(
-      (entries) => entries.forEach((e) => e.isIntersecting && setActive(e.target.id)),
-      { rootMargin: "-45% 0px -50% 0px" }
-    );
-    els.forEach((el) => io.observe(el));
-    return () => io.disconnect();
+    let id;
+    let off;
+    const update = () => {
+      const mid = window.innerHeight / 2;
+      const lenis = getLenis();
+      // the footer is fixed and revealed at the very end, so it has no position of its own to test
+      if (lenis?.limit && lenis.scroll / lenis.limit > 0.985) { setActive("contact"); return; }
+      const hit = LINKS.filter((l) => l.id !== "contact").find((l) => {
+        const r = document.getElementById(l.id)?.getBoundingClientRect();
+        return r && r.top <= mid && r.bottom > mid;
+      });
+      setActive(hit ? hit.id : "");
+    };
+    const bind = () => {
+      const lenis = getLenis();
+      if (!lenis) { id = requestAnimationFrame(bind); return; }
+      off = lenis.on("scroll", update);
+      update();
+    };
+    bind();
+    window.addEventListener("resize", update);
+    return () => { cancelAnimationFrame(id); off?.(); window.removeEventListener("resize", update); };
   }, [home, pathname]);
 
   // full-screen menu: circle wipe from the button
@@ -73,6 +89,15 @@ export default function Navbar() {
   }, [open]);
 
   useEffect(() => setOpen(false), [pathname]);
+
+  // Lenis is stopped while the menu is open, and start() resets it, cancelling any scroll already
+  // under way. So restart it before navigating rather than letting the close effect do it afterwards.
+  const onMenuLink = (e, href) => {
+    e.preventDefault();
+    getLenis()?.start();
+    setOpen(false);
+    go(href);
+  };
 
   return (
     <>
@@ -106,7 +131,7 @@ export default function Navbar() {
       <div ref={menu} className="pf-menu" style={{ visibility: "hidden" }}>
         <nav className="pf-menu__nav" aria-label="Menu">
           {[...LINKS, ...(SHOW_THOUGHTS ? [{ id: "thoughts", label: "Thoughts", n: "06", href: "/thoughts" }] : [])].map((l) => (
-            <a key={l.id} href={l.href || `/#${l.id}`} className="pf-menu__link" onClick={() => setOpen(false)}>
+            <a key={l.id} href={l.href || `/#${l.id}`} className="pf-menu__link" onClick={(e) => onMenuLink(e, l.href || `/#${l.id}`)}>
               <span><em>{l.n}</em>{l.label}</span>
             </a>
           ))}

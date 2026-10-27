@@ -163,12 +163,6 @@ html.has-cursor, html.has-cursor a, html.has-cursor button, html.has-cursor [dat
 .pf-btn__ico { width: 44px; height: 44px; border-radius: 50%; background: var(--ink); color: var(--lime); display: grid; place-items: center; transition: transform 0.6s var(--expo); }
 .pf-btn:hover .pf-btn__ico { transform: rotate(45deg); }
 
-/* ── marquee ── */
-.pf-marquee { overflow: hidden; border-block: 1px solid var(--hair); padding: clamp(16px, 2.4vw, 34px) 0; position: relative; z-index: 2; }
-.pf-marquee__track { display: flex; width: max-content; white-space: nowrap; will-change: transform; }
-.pf-marquee__item { display: inline-flex; align-items: center; gap: 0.45em; padding-right: 0.45em; font-size: clamp(54px, 9vw, 150px); font-weight: 700; letter-spacing: -0.05em; line-height: 1; text-transform: uppercase; }
-.pf-marquee__item .is-outline { color: transparent; -webkit-text-stroke: 1.5px rgba(241, 239, 232, 0.65); }
-.pf-marquee__star { width: 0.5em; height: 0.5em; color: var(--lime); animation: pf-spin 9s linear infinite; }
 @keyframes pf-spin { to { transform: rotate(360deg); } }
 
 /* ── section label ── */
@@ -305,5 +299,5 @@ html.in-foot .pf-cursor:not(.is-label) .pf-cursor__bg { background: var(--ink); 
   .pf-foot { height: max(100svh, 620px); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .pf-grain, .pf-marquee__star, .pf-status i { animation: none; }
+  .pf-grain, .pf-status i { animation: none; }
 }
