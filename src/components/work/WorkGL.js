@@ -80,7 +80,7 @@ const fragment = /* glsl */ `
  * One fixed, full-viewport canvas that renders a single liquid plane following the cursor.
  * Rows in the work list just tell it which image to show.
  */
-export default function WorkGL({ images, active }) {
+export default function WorkGL({ images, phones = [], active }) {
   const canvas = useRef(null);
   const api = useRef({});
 
@@ -108,11 +108,34 @@ export default function WorkGL({ images, active }) {
     });
     const mesh = new Mesh(gl, { geometry: new Plane(gl, { width: 1, height: 1, widthSegments: 24, heightSegments: 24 }), program });
 
+    // The preview box takes the shape of what it shows: a browser-like landscape
+    // window for websites (the screenshots are full-page, so we show the top of
+    // the page the way a visitor first sees it), and a tall phone frame for apps.
+    const box = { w: 520, h: 325 };
+    const boxFor = (i) => {
+      const vw = window.innerWidth, vh = window.innerHeight;
+      const t = textures[i];
+      if (phones[i]) {
+        const asp = t && t.loaded ? Math.min(t.aspect, 0.75) : 9 / 16;
+        const h = Math.min(560, vh * 0.62);
+        return { w: h * asp, h };
+      }
+      // 16:10 window, widened to match screenshots that are wider than that so nothing is cropped off the sides
+      const asp = t && t.loaded ? Math.min(Math.max(t.aspect, 1.6), 2.1) : 1.6;
+      const w = Math.min(600, vw * 0.42, vh * 0.6 * asp);
+      return { w, h: w / asp };
+    };
+    const fitBox = (i, instant) => {
+      const b = boxFor(i);
+      gsap.killTweensOf(box);
+      if (instant) { box.w = b.w; box.h = b.h; } else gsap.to(box, { w: b.w, h: b.h, duration: 0.7, ease: "power3.inOut" });
+    };
+
+    let shown = null;
     const resize = () => {
       renderer.setSize(window.innerWidth, window.innerHeight);
       program.uniforms.uRes.value = [window.innerWidth, window.innerHeight];
-      const w = Math.min(380, window.innerWidth * 0.3);
-      program.uniforms.uSize.value = [w, w * 1.3];
+      if (shown !== null) fitBox(shown, true);
     };
     resize();
     window.addEventListener("resize", resize);
@@ -131,11 +154,14 @@ export default function WorkGL({ images, active }) {
       // ask for CORS so cross-origin images (e.g. blog covers on an image CDN) can be used as textures;
       // if a host doesn't allow it, that preview simply never loads instead of throwing a WebGL error
       img.crossOrigin = "anonymous";
-      img.onload = () => { t.tex.image = img; t.aspect = img.naturalWidth / img.naturalHeight; t.loaded = true; };
+      img.onload = () => {
+        t.tex.image = img; t.aspect = img.naturalWidth / img.naturalHeight; t.loaded = true;
+        if (shown === i) fitBox(i, false);
+      };
       img.src = images[i];
     };
 
-    let shown = null;
+    let side = 1; // 1 = preview right of the cursor, -1 = left; eases between so the flip isn't a jump
     const tick = (time) => {
       const u = program.uniforms;
       if (u.uScale.value < 0.002 && shown === null) return;
@@ -146,8 +172,14 @@ export default function WorkGL({ images, active }) {
       vel.x += ((pos.x - px) - vel.x) * 0.25;
       vel.y += ((pos.y - py) - vel.y) * 0.25;
       // sit beside the cursor rather than on it, so the row title stays readable
-      const sz = u.uSize.value;
-      u.uPos.value = [pos.x + sz[0] * 0.62, pos.y - sz[1] * 0.04];
+      // and flip to the left of it when the (now wider) window would run off the right edge
+      const vw = window.innerWidth, vh = window.innerHeight, m = 16;
+      u.uSize.value = [box.w, box.h];
+      const want = pos.x + box.w * 1.12 > vw - m ? -1 : 1;
+      side += (want - side) * 0.12;
+      const cx = Math.min(Math.max(pos.x + side * box.w * 0.62, box.w / 2 + m), vw - box.w / 2 - m);
+      const cy = Math.min(Math.max(pos.y - box.h * 0.04, box.h / 2 + m), vh - box.h / 2 - m);
+      u.uPos.value = [cx, cy];
       u.uVel.value = [Math.max(-90, Math.min(90, vel.x)), Math.max(-90, Math.min(90, vel.y))];
       u.uTime.value = time;
       // keep the sampler pointing at whichever images have finished loading
@@ -171,11 +203,14 @@ export default function WorkGL({ images, active }) {
       const prev = shown;
       shown = idx;
       gsap.killTweensOf(u.uScale);
-      if (prev === null || u.uScale.value < 0.05) {
+      const fresh = prev === null || u.uScale.value < 0.05;
+      fitBox(idx, fresh);
+      if (fresh) {
         u.uMix.value = 1;
         const tb = textures[idx];
         u.tA.value = tb.tex; u.uAspA.value = tb.aspect;
         pos.x = target.x; pos.y = target.y;
+        side = pos.x + box.w * 1.12 > window.innerWidth - 16 ? -1 : 1;
       } else {
         // freeze the outgoing image into slot A and wipe to the new one
         const tp = textures[prev];
@@ -189,11 +224,12 @@ export default function WorkGL({ images, active }) {
     return () => {
       gsap.ticker.remove(tick);
       gsap.killTweensOf(program.uniforms.uScale);
+      gsap.killTweensOf(box);
       window.removeEventListener("resize", resize);
       window.removeEventListener("mousemove", onMove);
       gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
-  }, [images]);
+  }, [images, phones]);
 
   useEffect(() => { api.current.set?.(active); }, [active]);
 

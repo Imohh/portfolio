@@ -12,6 +12,7 @@ import sopeadelaja from "../../Assets/Projects/sope.png";
 import joel from "../../Assets/Projects/joel.png";
 import oprime from "../../Assets/Projects/oprime.png";
 import learnbuddie from "../../Assets/Projects/learnbuddie.png";
+import okuk from "../../Assets/Projects/okuk.png";
 
 function Projects() {
   return (
@@ -52,6 +53,15 @@ function Projects() {
               title="Learnbuddie"
               description="A comprehensive learning platform for students."
               demoLink="https://learnbuddie.com"
+            />
+          </Col>
+          <Col md={4} className="project-card">
+            <ProjectCard
+              imgPath={okuk}
+              isBlog={false}
+              title="Okuk"
+              description="Okuk helps small businesses manage sales, inventory, customers and payments across all their sales channels in one place."
+              demoLink="https://okuk.africa"
             />
           </Col>
           

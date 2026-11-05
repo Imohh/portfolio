@@ -10,6 +10,7 @@ import recreate from "./Assets/opt/recreate.jpg";
 import glintz from "./Assets/opt/glintz.jpg";
 import joel from "./Assets/opt/joel.jpg";
 import ycc from "./Assets/opt/ycc.jpg";
+import okuk from "./Assets/opt/okuk.jpg";
 
 export const socialLinks = [
   { href: "https://github.com/imohh", icon: <AiFillGithub />, label: "GitHub" },
@@ -35,10 +36,11 @@ export const toolbox = [
 
 export const projects = [
   {
-    img: parensure, title: "Parensure", tag: "Caregiving platform", year: "2025",
+    img: parensure, title: "Parensure", tag: "Caregiving platform", year: "2025", phone: true,
     stack: "React Native / Node",
     demoLink: "https://play.google.com/store/apps/details?id=com.parensure&hl=en",
   },
+  { img: okuk, title: "Okuk", tag: "Finance for small businesses", year: "2026", stack: "React / Node / AI", demoLink: "https://okuk.africa" },
   { img: joel, title: "Joel Adu", tag: "Photographer portfolio", year: "2025", stack: "React / Vercel", demoLink: "https://joelstudio.vercel.app" },
   { img: learnbuddie, title: "Learnbuddie", tag: "EdTech platform", year: "2024", stack: "React / Node", demoLink: "https://learnbuddie.com" },
   { img: sopeadelaja, title: "Sope Adelaja", tag: "Creative portfolio + store", year: "2024", stack: "MERN / Stripe", demoLink: "https://sopeadelaja.com/" },

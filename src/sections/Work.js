@@ -12,6 +12,7 @@ export default function Work() {
   const [active, setActive] = useState(null);
   const fine = useMemo(() => isFinePointer(), []);
   const images = useMemo(() => projects.map((p) => p.img), []);
+  const phones = useMemo(() => projects.map((p) => !!p.phone), []);
 
   // WorkGL's preview canvas is fixed to the viewport and only clears on an
   // explicit mouseleave/blur. Scrolling without also moving the mouse (wheel,
@@ -64,6 +65,12 @@ export default function Work() {
               target="_blank"
               rel="noreferrer"
               onMouseEnter={() => fine && setActive(i)}
+              // Scrolling clears the preview (see the effect above), but the cursor is
+              // usually still sitting on a row when the scroll stops — often a different
+              // row that slid underneath it, whose mouseenter already fired mid-scroll.
+              // No new mouseenter comes until the cursor leaves and re-enters, so the
+              // preview stayed dead. Any movement over a row re-asserts it instead.
+              onMouseMove={() => fine && active !== i && setActive(i)}
               onFocus={() => fine && setActive(i)}
               onBlur={() => setActive(null)}
             >
@@ -79,7 +86,7 @@ export default function Work() {
         ))}
       </ul>
 
-      {fine && <WorkGL images={images} active={active} />}
+      {fine && <WorkGL images={images} phones={phones} active={active} />}
     </section>
   );
 }
