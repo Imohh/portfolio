@@ -52,8 +52,9 @@ export const projects = [
 export const testimonials = [
   { quote: "Your ability to translate my ideas into code is what is making Parensure a reality! I greatly appreciate your work and support!", name: "Julio Gonzalez", role: "CEO, Parensure" },
   { quote: "Imoh is a highly skilled developer especially in ReactJs. He has incredible leadership skills, as well as an exemplary work ethic and friendly temperament, making him the model professional and wonderful human being.", name: "Charles Hul", role: "CEO, Chekam" },
+  { quote: "I really enjoyed working with Precious on a web design project. He made the whole process smooth, brought in great ideas, and was always open to feedback. The result turned out even better than I expected, and it felt like a real collaboration from start to finish.", name: "Sope Adelaja", role: "Photographer" },
   { quote: "Having been in the tech space for over 15 years, I can say for certain that Imoh is one of the most brilliant developers I have worked with. He has in-depth knowledge of multiple modern development technologies and the ability to learn quickly.", name: "Joseph Abyem", role: "CTO, Chekam" },
-  { quote: "I own a London based luxury brand. Precious built my E-Commerce website and was the head of my tech department. He was easy to work with and also willing to learn.", name: "Etopidiok Joshua", role: "Financial Markets Enthusiast" },
+  // { quote: "I own a London based luxury brand. Precious built my E-Commerce website and was the head of my tech department. He was easy to work with and also willing to learn.", name: "Etopidiok Joshua", role: "Financial Markets Enthusiast" },
   { quote: "Extremely professional and puts out deliverables very timely.", name: "Joel Adu", role: "Photographer" },
   { quote: "Precious is an amazing web developer, easy to work with and he gives attention to details.", name: "Temitope Jalekun", role: "Photographer" },
 ];
