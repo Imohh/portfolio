@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Fragment, useCallback, useLayoutEffect, useRef, useState } from "react";
 import { AiFillGithub, AiOutlineTwitter, AiFillInstagram } from "react-icons/ai";
 import { FaLinkedinIn } from "react-icons/fa";
 import { BsArrowUpRight } from "react-icons/bs";
@@ -15,16 +15,6 @@ const SOCIALS = [
   { href: "https://www.instagram.com/imoh_xo", label: "Instagram", icon: <AiFillInstagram /> },
 ];
 
-function useLagosClock() {
-  const fmt = useRef(new Intl.DateTimeFormat("en-GB", { timeZone: "Africa/Lagos", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false }));
-  const [t, setT] = useState(() => fmt.current.format(new Date()));
-  useEffect(() => {
-    const id = setInterval(() => setT(fmt.current.format(new Date())), 1000);
-    return () => clearInterval(id);
-  }, []);
-  return t;
-}
-
 /**
  * The footer is position:fixed *underneath* the page; <main> carries a bottom margin equal to its
  * height, so scrolling to the end peels the page away like a curtain. Behind the UI sits an
@@ -32,7 +22,6 @@ function useLagosClock() {
  */
 export default function Footer() {
   const root = useRef(null);
-  const time = useLagosClock();
   const [noGL, setNoGL] = useState(false);
   const onFail = useCallback(() => setNoGL(true), []);
 
@@ -70,7 +59,6 @@ export default function Footer() {
       <div className="pf-foot__ui">
         <div className="pf-foot__top">
           <span className="pf-label pf-foot__fade">05 &mdash; Contact</span>
-          <span className="pf-label pf-foot__fade">Lagos, NG &mdash; {time} WAT</span>
         </div>
 
         {noGL ? (
