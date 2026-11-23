@@ -95,6 +95,13 @@
   }
   </script>
 
+  <!-- Dark from the first paint, and the crawler text below stays readable to search engines but out of sight
+       until React swaps in the real page and its preloader. -->
+  <style>
+    html, body { background: #03030a; margin: 0; }
+    .seo-seed { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+  </style>
+
   <!-- ============ GOOGLE ANALYTICS ============ -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-6JTWX11JEF"></script>
   <script>
@@ -112,7 +119,7 @@
     instead of an empty page.
   -->
   <div id="root">
-    <main>
+    <main class="seo-seed">
       <h1>Precious Imoh</h1>
       <p>Software Engineer based in Lagos, Nigeria.</p>
       <p>
