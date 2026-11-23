@@ -115,8 +115,8 @@ function layout(W, H) {
   let f1, f2, x, yb1, yb2;
   if (mobile) {
     // lock-up: both words justified to the same measure
-    f1 = (W * 0.9) / 2.62;
-    f2 = (W * 0.9) / 5.32;
+    f1 = (W * 0.9) / 5.32;
+    f2 = (W * 0.9) / 2.62;
     x = W * 0.05;
     yb1 = H * 0.27 + f1 * 0.76;
     yb2 = yb1 + f2 * 1.05;
@@ -147,8 +147,8 @@ function drawName(canvas, W, H, dpr, L) {
     if ("letterSpacing" in ctx) ctx.letterSpacing = `${(-0.045 * size).toFixed(2)}px`;
     ctx.fillText(str, x, y);
   };
-  draw("IMOH", L.f1, L.x, L.yb1);
-  draw("PRECIOUS", L.f2, L.x, L.yb2);
+  draw("PRECIOUS", L.f1, L.x, L.yb1);
+  draw("IMOH", L.f2, L.x, L.yb2);
   const cap = 0.76;
   return [
     1 - (L.yb1 + L.f1 * 0.08) / H, 1 - (L.yb1 - L.f1 * cap) / H,
@@ -293,9 +293,9 @@ export default function HeroGL({ ready }) {
   return (
     <div ref={wrap} className="pf-stage__gl">
       {fallback ? (
-        <div className="pf-stage__fallback"><img src={portrait} alt="Imoh Precious" /><b>Imoh<br />Precious</b></div>
+        <div className="pf-stage__fallback"><img src={portrait} alt="Precious Imoh" /><b>Precious<br />Imoh</b></div>
       ) : (
-        <canvas ref={canvas} role="img" aria-label="Imoh Precious" />
+        <canvas ref={canvas} role="img" aria-label="Precious Imoh" />
       )}
     </div>
   );

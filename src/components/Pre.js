@@ -168,7 +168,7 @@ function Pre({ onReveal, onDone }) {
 
       <div className="pf-pre__ui">
         <div className="pf-pre__meta">
-          <span>Imoh Precious</span>
+          <span>Precious Imoh</span>
           <span>Portfolio &mdash; 2021</span>
           <span>Lagos, NG</span>
         </div>

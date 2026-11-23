@@ -4,7 +4,7 @@ import Split, { parseWords } from "../components/fx/Split";
 import { Label } from "./Bits";
 
 const STATEMENT =
-  "I'm *Imoh Precious*, a frontend engineer in Lagos who treats the browser as a canvas. The blend between economics and tech has taught me to think in systems; years of shipping taught me that the details are the product. I build interfaces that feel *effortless* and look unforgettable, I love creating experiences, and I'm currently doing it at *Punch.*";
+  "I'm *Precious Imoh*, a frontend engineer in Lagos who treats the browser as a canvas. The blend between economics and tech has taught me to think in systems; years of shipping taught me that the details are the product. I build interfaces that feel *effortless* and look unforgettable, I love creating experiences, and I'm currently doing it at *Punch.*";
 
 const CAPABILITIES = [
   ["Interface engineering", "React · Next.js · TypeScript"],

@@ -86,8 +86,8 @@ const BlogList = () => {
   return (
     <>
       <Helmet>
-        <title>Thoughts | Imoh Precious</title>
-        <meta name="description" content="Notes by Imoh Precious on frontend development, building products and the craft of shipping software." />
+        <title>Thoughts | Precious Imoh</title>
+        <meta name="description" content="Notes by Precious Imoh on frontend development, building products and the craft of shipping software." />
       </Helmet>
 
       <section ref={root} className="pf-thoughts pf-section">

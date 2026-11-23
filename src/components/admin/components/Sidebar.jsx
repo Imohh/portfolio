@@ -60,7 +60,7 @@ const Sidebar = () => {
             textAlign: 'center',
             textShadow: '0 2px 10px rgba(96, 165, 250, 0.4)'
           }}>
-            Imoh Precious
+            Precious Imoh
           </p>
           <p style={{
             color: '#94a3b8',

@@ -169,7 +169,7 @@ const BlogPost = () => {
   return (
     <>
       <Helmet>
-        <title>{`${sentence(post.name)} | Imoh Precious`}</title>
+        <title>{`${sentence(post.name)} | Precious Imoh`}</title>
         <meta name="description" content={post.excerpt || post.name} />
       </Helmet>
 

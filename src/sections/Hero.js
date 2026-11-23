@@ -46,7 +46,7 @@ export default function Hero({ ready }) {
 
   return (
     <section ref={root} className="pf-hero" id="home">
-      <h1 className="pf-sr">Imoh Precious &mdash; Frontend Engineer based in Lagos, Nigeria</h1>
+      <h1 className="pf-sr">Precious Imoh &mdash; Frontend Engineer based in Lagos, Nigeria</h1>
 
       <div className="pf-stage">
         <HeroGL ready={ready} />
