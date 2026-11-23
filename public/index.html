@@ -3,40 +3,99 @@
 
 <head>
   <meta charset="utf-8" />
-  <link rel="icon" type="image/png" href="%PUBLIC_URL%/logo.png" />
-  <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#08080a" />
+
+  <!-- ============ PRIMARY SEO ============ -->
+  <!-- Your name first, then what you do. Keep under ~60 characters. -->
+  <title>Precious Imoh – Software Engineer | Portfolio</title>
+  <!-- ONE description only. 140–160 characters, a plain sentence about you. -->
+  <meta name="description" content="Precious Imoh is a software Engineer based in Lagos, Nigeria, building fast, modern websites and web apps with React.js. View projects and get in touch." />
+  <meta name="author" content="Precious Imoh" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <!-- Tells Google which address is the "real" one. Change if you buy preciousimoh.com -->
+  <link rel="canonical" href="https://preciousimoh.com/" />
+
+  <!-- Google Search Console verification: paste the tag Search Console gives you here -->
+  <!-- <meta name="google-site-verification" content="PASTE_CODE_HERE" /> -->
+
+  <!-- ============ ICONS / MANIFEST ============ -->
+  <link rel="icon" type="image/png" href="%PUBLIC_URL%/logo.png" />
+  <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo.png" />
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+  <!-- ============ FONTS ============ -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <meta name="description" content="Web site created using create-react-app" />
-  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-  <title>Precious Imoh | Portfolio</title>
-  <meta name="description" content="Self Developed personal website build with React.js">
 
-  <!-- Google / Search Engine Tags -->
-  <meta itemprop="name" content="Precious Imoh | Portfolio">
-  <meta itemprop="description" content="Self Developed personal website build with React.js">
-  <meta itemprop="image"
-    content="https://raw.githubusercontent.com/imohh/Portfolio/master/Images/readme-img.png?token=AK7VCIF5RYEUZZAURELPTAC76U6AK">
+  <!-- ============ OPEN GRAPH (Facebook, LinkedIn, WhatsApp) ============ -->
+  <meta property="og:type" content="profile" />
+  <meta property="og:url" content="https://preciousimoh.com/" />
+  <meta property="og:site_name" content="Precious Imoh" />
+  <meta property="og:title" content="Precious Imoh – Software Engineer" />
+  <meta property="og:description" content="Portfolio of Precious Imoh, a Software Engineer in Lagos, Nigeria, building modern websites with React.js." />
+  <!-- Put a 1200x630 image at public/og-image.png -->
+  <meta property="og:image" content="https://preciousimoh.com/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Precious Imoh – Software Engineer" />
+  <meta property="profile:first_name" content="Precious" />
+  <meta property="profile:last_name" content="Imoh" />
 
-  <!-- Facebook Meta Tags -->
-  <meta property="og:url" content="https://imohportfolio.vercel.app">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Precious Imoh | Portfolio">
-  <meta property="og:description" content="Self Developed personal website build with React.js">
-  <meta property="og:image"
-    content="https://raw.githubusercontent.com/imohh/Portfolio/master/Images/readme-img.png?token=AK7VCIF5RYEUZZAURELPTAC76U6AK">
+  <!-- ============ TWITTER / X ============ -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Precious Imoh – Software Engineer" />
+  <meta name="twitter:description" content="Portfolio of Precious Imoh, a Software Engineer in Lagos, Nigeria, building modern websites with React.js." />
+  <meta name="twitter:image" content="https://preciousimoh.com/og-image.png" />
+  <!-- <meta name="twitter:creator" content="@your_x_handle" /> -->
 
-  <!-- Twitter Meta Tags -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Precious Imoh| Portfolio">
-  <meta name="twitter:description" content="Self Developed personal website build with React.js">
-  <meta name="twitter:image"
-    content="https://raw.githubusercontent.com/imohh/Portfolio/master/Images/readme-img.png?token=AK7VCIF5RYEUZZAURELPTAC76U6AK">
+  <!-- ============ STRUCTURED DATA (helps Google / AI Overview know who you are) ============ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": "https://preciousimoh.com/#person",
+        "name": "Precious Imoh",
+        "givenName": "Precious",
+        "familyName": "Imoh",
+        "url": "https://preciousimoh.com/",
+        "image": "https://preciousimoh.com/profile.jpg",
+        "jobTitle": "Software Engineer",
+        "description": "Precious Imoh is a Software Engineer based in Lagos, Nigeria, who builds modern websites and web applications with React.js.",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Lagos",
+          "addressCountry": "NG"
+        },
+        "knowsAbout": ["React.js", "JavaScript", "HTML", "CSS", "Web Development"],
+        "sameAs": [
+          "https://github.com/imohh",
+          "https://www.linkedin.com/in/YOUR-LINKEDIN",
+          "https://x.com/YOUR-HANDLE",
+          "https://www.instagram.com/YOUR-HANDLE"
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://preciousimoh.com/#website",
+        "url": "https://preciousimoh.com/",
+        "name": "Precious Imoh",
+        "author": { "@id": "https://preciousimoh.com/#person" }
+      },
+      {
+        "@type": "ProfilePage",
+        "url": "https://preciousimoh.com/",
+        "name": "Precious Imoh – Software Engineer",
+        "mainEntity": { "@id": "https://preciousimoh.com/#person" }
+      }
+    ]
+  }
+  </script>
 
-    <!-- Google tag (gtag.js) -->
+  <!-- ============ GOOGLE ANALYTICS ============ -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-6JTWX11JEF"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -44,12 +103,32 @@
     gtag('js', new Date());
     gtag('config', 'G-6JTWX11JEF');
   </script>
-
-  </head>
+</head>
 
 <body>
-  <noscript>You need to enable JavaScript to run this app.</noscript>
-  <div id="root"></div>
+  <!--
+    React replaces everything inside #root when it loads.
+    Until then, crawlers and link previews see this real text about you
+    instead of an empty page.
+  -->
+  <div id="root">
+    <main>
+      <h1>Precious Imoh</h1>
+      <p>Software Engineer based in Lagos, Nigeria.</p>
+      <p>
+        Hi, I'm Precious Imoh. I build fast, modern websites and web
+        applications with React.js. This is my portfolio, where you can see
+        my projects and get in touch.
+      </p>
+      <nav>
+        <a href="https://github.com/imohh">GitHub</a> ·
+        <a href="https://www.linkedin.com/in/YOUR-LINKEDIN">LinkedIn</a> ·
+        <a href="https://x.com/YOUR-HANDLE">X</a> ·
+        <a href="https://www.instagram.com/YOUR-HANDLE">Instagram</a>
+      </nav>
+    </main>
+  </div>
+  <noscript>You need to enable JavaScript to view the full portfolio of Precious Imoh.</noscript>
 </body>
 
 </html>
