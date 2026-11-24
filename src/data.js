@@ -15,7 +15,7 @@ import okuk from "./Assets/opt/okuk.jpg";
 export const socialLinks = [
   { href: "https://github.com/imohh", icon: <AiFillGithub />, label: "GitHub" },
   { href: "https://twitter.com/imoh_xo", icon: <AiOutlineTwitter />, label: "Twitter" },
-  { href: "https://www.linkedin.com/in/precious-imoh/", icon: <FaLinkedinIn />, label: "LinkedIn" },
+  { href: "https://www.linkedin.com/in/preciousimoh/", icon: <FaLinkedinIn />, label: "LinkedIn" },
   { href: "https://www.instagram.com/imoh_xo", icon: <AiFillInstagram />, label: "Instagram" },
 ];
 

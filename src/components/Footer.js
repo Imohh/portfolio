@@ -11,7 +11,7 @@ import { parseWords } from "./fx/Split";
 const SOCIALS = [
   { href: "https://github.com/imohh", label: "GitHub", icon: <AiFillGithub /> },
   { href: "https://twitter.com/imoh_xo", label: "Twitter", icon: <AiOutlineTwitter /> },
-  { href: "https://www.linkedin.com/in/precious-imoh/", label: "LinkedIn", icon: <FaLinkedinIn /> },
+  { href: "https://www.linkedin.com/in/preciousimoh/", label: "LinkedIn", icon: <FaLinkedinIn /> },
   { href: "https://www.instagram.com/imoh_xo", label: "Instagram", icon: <AiFillInstagram /> },
 ];
 
