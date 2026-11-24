@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { Renderer, Program, Mesh, Triangle, Texture, Flowmap, Vec2 } from "ogl";
 import { gsap, ScrollTrigger, prefersReducedMotion } from "../../lib/smooth";
-import portrait from "../../Assets/opt/portrait.jpg";
+import portrait from "../../Assets/opt/portrait.png";
+
+// width / height of the portrait image; the layout keeps the photo at this shape
+const PHOTO_ASPECT = 1430 / 1182;
 
 const vertex = /* glsl */ `
   attribute vec2 uv;
@@ -13,8 +16,9 @@ const vertex = /* glsl */ `
 /*
  * One full-stage fragment shader composes the whole hero:
  *   page background -> giant name (offscreen 2D canvas texture) -> lime disc -> the person
- * The source photo is a purple disc on a navy card. Both are colour-keyed: navy becomes transparent,
- * purple becomes acid lime. That gives real depth: the name sits *behind* his head and shoulders,
+ * The source photo is a cut-out PNG: a green disc behind the person on a transparent background.
+ * Alpha gives the cut-out; the green is colour-keyed into the disc layer (re-tinted to the site's
+ * acid lime). That gives real depth: the name sits *behind* the head and shoulders,
  * turns ink-black where it crosses the lime disc, and the whole stack is smeared by one shared
  * flowmap, so letters and portrait ripple together around the cursor.
  */
@@ -47,19 +51,21 @@ const fragment = /* glsl */ `
   Shot shoot(vec2 uv) {
     vec2 pu = (uv - uRect.xy) / (uRect.zw - uRect.xy);
     float inside = step(0.0, pu.x) * step(pu.x, 1.0) * step(0.0, pu.y) * step(pu.y, 1.0);
-    vec3 c = texture2D(tPhoto, clamp(pu, 0.0, 1.0)).rgb;
+    vec4 px = texture2D(tPhoto, clamp(pu, 0.0, 1.0));
+    vec3 c = px.rgb;
+    float alpha = px.a;
     float lum = dot(c, vec3(0.299, 0.587, 0.114));
-    float purple = clamp((min(c.r, c.b) - c.g) * 4.0, 0.0, 1.0);
-    float navy = clamp((c.b - max(c.r, c.g) - 0.02) * 18.0, 0.0, 1.0) * (1.0 - purple);
+    // the disc is a saturated green; skin, hair and the jumper are all far from it
+    float green = smoothstep(0.08, 0.2, c.g - max(c.r, c.b));
 
-    vec3 disc = LIME * clamp(lum / 0.41, 0.25, 1.15);
+    vec3 disc = LIME * clamp(lum / 0.7, 0.25, 1.15);
     disc *= 0.82 + 0.28 * smoothstep(1.1, 0.0, distance(pu, vec2(0.34, 0.72)));
     vec3 person = mix(c, c * c * (3.0 - 2.0 * c), 0.25);
 
     Shot s;
-    s.col = mix(person, disc, purple);
-    s.disc = purple * inside;
-    s.person = (1.0 - purple) * (1.0 - navy) * inside;
+    s.col = mix(person, disc, green);
+    s.disc = green * alpha * inside;
+    s.person = (1.0 - green) * alpha * inside;
     s.inside = inside;
     return s;
   }
@@ -126,8 +132,9 @@ function layout(W, H) {
     yb1 = H * 0.56;
     yb2 = yb1 + f1 * 0.86;
   }
-  const pw = mobile ? W * 0.82 : Math.min(W * 0.34, H * 0.96 * 0.886);
-  const ph = pw / 0.886;
+  // this photo is wider than tall, so it gets more width than the old portrait to keep a similar height
+  const pw = mobile ? W * 0.82 : Math.min(W * 0.42, H * 0.96 * PHOTO_ASPECT);
+  const ph = pw / PHOTO_ASPECT;
   const px = mobile ? W * 0.16 : W * 0.965 - pw;
   // on phones the head must clear the name, so the portrait starts below the second line
   const py = mobile ? Math.max(yb2 + f2 * 0.2, H - ph + H * 0.03) : H - ph;
